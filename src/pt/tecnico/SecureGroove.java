@@ -14,6 +14,7 @@ import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -36,6 +37,9 @@ public class SecureGroove {
     public static String CIPHER_PADDING = "PKCS5Padding";
 
     public static String CIPHER = CIPHER_ALGO + "/" + CIPHER_BLOCK_MODE + "/" + CIPHER_PADDING;
+
+    public static String MAC_ALGO = "HmacSHA256";
+    public static long MIC_TTL = 30000; // 30 seconds
 
     /**
      * The main method is the entry point of the SecureGroove program.
@@ -70,7 +74,21 @@ public class SecureGroove {
                 break;
 
             case "check":
-                throw new UnsupportedOperationException("Not implemented yet");
+                if (args.length != 3) {
+                    printHelp();
+                    return;
+                }
+
+                inputPath = args[1];
+                keyPath = args[2];
+
+                try {
+                    check(inputPath, keyPath);
+                } catch (Exception e) {
+                    System.err.println("Error checking file:\n" + e.getMessage());
+                }
+
+                break;
 
             case "unprotect":
                 if (args.length != 4) {
@@ -134,13 +152,46 @@ public class SecureGroove {
         media.addProperty("mediaContent", base64CipheredMediaContent);
         data.add("media", media);
         root.add("data", data);
-        root.add("metadata", createMetadata(iv));
+
+        JsonObject metadata = createMetadata(iv);
+        root.add("metadata", metadata);
+        root.addProperty("MIC", createMIC(data, metadata, key));
 
         writeJsonFile(outputPath, root);
     }
 
-    private static void check(String input, String key) {
-        throw new UnsupportedOperationException("Not implemented yet");
+    /**
+     * Checks the integrity of the media content in the input file using the provided secret
+     * key.
+     *
+     * @param inputPath  The path to the input file containing the ciphered data.
+     * @param keyPath    The path to the file containing the secret key used for decryption.
+     * @throws Exception If an error occurs during the decryption process.
+     */
+    private static void check(String inputPath, String keyPath) throws Exception{
+        Key key = readSecretKey(keyPath);
+        
+        JsonObject root = readJsonFile(inputPath);
+
+        JsonObject data = root.get("data").getAsJsonObject();
+        JsonObject metadata = root.get("metadata").getAsJsonObject();
+        String MIC = root.get("MIC").getAsString();
+
+        String recomputedMIC = createMIC(data, metadata, key);
+
+        if (!MIC.equals(recomputedMIC)) {
+            throw new Exception("MIC does not match");
+        }
+
+        long timestamp = metadata.get("mic").getAsJsonObject().get("timestamp").getAsLong();
+        long now = System.currentTimeMillis();
+
+        // Check if MIC is older than 30 seconds
+        if (now - timestamp > MIC_TTL) {
+            throw new Exception("Message is not fresh");
+        }
+
+        System.out.println("Message is fresh and authentic");
     }
 
     /**
@@ -194,7 +245,30 @@ public class SecureGroove {
 
         metadata.add("cipher", cipherMetadata);
 
+        JsonObject micMetadata = new JsonObject();
+        micMetadata.addProperty("algorithm", MAC_ALGO);
+        micMetadata.addProperty("timestamp", System.currentTimeMillis());
+
+        metadata.add("mic", micMetadata);
+
         return metadata;
+    }
+
+    /**
+     * Creates a Message Integrity Code (MIC) String representation for the given data.
+     *
+     * @param data The data to be protected.
+     * @param key  The secret key used for encryption.
+     * @return The String representation of the MIC.
+     * @throws Exception If an error occurs during the MIC computation.
+     */
+    private static String createMIC(JsonObject data, JsonObject metadata, Key key) throws Exception {
+        String allData = data.toString() + metadata.toString();
+
+        byte[] plainBytes = allData.getBytes();
+        byte[] macBytes = makeMAC(plainBytes, key);
+
+        return Base64.getEncoder().encodeToString(macBytes);
     }
 
     /**
@@ -315,5 +389,21 @@ public class SecureGroove {
         IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
         cipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
         return cipher.doFinal(bytes);
+    }
+
+
+    /**
+     * Computes the Message Integrity Code (MIC) for the given data using the specified key.
+     *
+     * @param plainBytes the data to be protected
+     * @param key the secret key used for protection
+     * @return the MIC as a byte array
+     * @throws Exception if an error occurs during the MIC computation
+     */
+    public static byte[] makeMAC(byte[] plainBytes, Key key) throws Exception {
+        Mac mac = Mac.getInstance(MAC_ALGO);
+        mac.init(key);
+        byte[] recomputedMACBytes = mac.doFinal(plainBytes);
+        return recomputedMACBytes;
     }
 }

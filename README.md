@@ -2,15 +2,15 @@
 
 ## Team
 
-| Number | Name              | User                             | E-mail                              |
-| -------|-------------------|----------------------------------| ------------------------------------|
-| 11111  | Alice Network     | <https://github.com/AliceUser>   | <mailto:alice@tecnico.ulisboa.pt>   |
-| 22222  | Bob Computer      | <https://github.com/BobUser>     | <mailto:bob@tecnico.ulisboa.pt>     |
-| 99115  | Pedro Lobo        | <https://github.com/pedroclobo>  | <mailto:pedro.lobo@tecnico.ulisboa.pt> |
+| Number | Name              | User                               | E-mail                                    |
+| -------|-------------------|------------------------------------|-------------------------------------------|
+| 11111  | Alice Network     | <https://github.com/AliceUser>     | <mailto:alice@tecnico.ulisboa.pt>         |
+| 99074  | Bob Computer      | <https://github.com/goncaloinunes> | <mailto:goncaloinunes@tecnico.ulisboa.pt> |
+| 99115  | Pedro Lobo        | <https://github.com/pedroclobo>    | <mailto:pedro.lobo@tecnico.ulisboa.pt>    |
 
 *(fill table above with team member information)*  
 
-![Alice](img/alice.png) ![Bob](img/bob.png) ![Pedro](img/pedro.png)
+![Alice](img/alice.png) ![Gonçalo](img/goncalo.png) ![Pedro](img/pedro.png)
 
 *(add face photos with 150px height; faces should have similar size and framing)*
 

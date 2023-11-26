@@ -4,15 +4,11 @@
 
 | Number | Name              | User                               | E-mail                                    |
 | -------|-------------------|------------------------------------|-------------------------------------------|
-| 11111  | Alice Network     | <https://github.com/AliceUser>     | <mailto:alice@tecnico.ulisboa.pt>         |
+| 99053  | André Torres      | <https://github.com/atorrres>      | <mailto:andre.torres@tecnico.ulisboa.pt>  |
 | 99074  | Bob Computer      | <https://github.com/goncaloinunes> | <mailto:goncaloinunes@tecnico.ulisboa.pt> |
 | 99115  | Pedro Lobo        | <https://github.com/pedroclobo>    | <mailto:pedro.lobo@tecnico.ulisboa.pt>    |
 
-*(fill table above with team member information)*  
-
-![Alice](img/alice.png) ![Gonçalo](img/goncalo.png) ![Pedro](img/pedro.png)
-
-*(add face photos with 150px height; faces should have similar size and framing)*
+![André](img/andre.png) ![Gonçalo](img/goncalo.png) ![Pedro](img/pedro.png)
 
 ## Contents
 

@@ -210,16 +210,16 @@ public class SecureGroove {
 
         JsonObject data = root.get("data").getAsJsonObject();
         JsonObject media = data.get("media").getAsJsonObject();
-        JsonObject mediaContent = media.get("mediaContent").getAsJsonObject();
+        String mediaContentString = media.get("mediaContent").getAsString();
 
         // Extract IV
         JsonObject cipherMetadata = root.get("metadata").getAsJsonObject().get("cipher").getAsJsonObject();
         byte[] iv = Base64.getDecoder().decode(cipherMetadata.get("initialization-vector").getAsString());
 
         // Decipher media content
-        byte[] cipheredMediaContent = Base64.getDecoder().decode(mediaContent.getAsString());
+        byte[] cipheredMediaContent = Base64.getDecoder().decode(mediaContentString);
         byte[] mediaContentBytes = decipher(cipheredMediaContent, key, iv);
-        mediaContent = new Gson().fromJson(new String(mediaContentBytes), JsonObject.class);
+        JsonObject mediaContent = new Gson().fromJson(new String(mediaContentBytes), JsonObject.class);
 
         media.add("mediaContent", mediaContent);
 

@@ -5,7 +5,7 @@
 | Number | Name              | User                               | E-mail                                    |
 | -------|-------------------|------------------------------------|-------------------------------------------|
 | 99053  | André Torres      | <https://github.com/atorrres>      | <mailto:andre.torres@tecnico.ulisboa.pt>  |
-| 99074  | Bob Computer      | <https://github.com/goncaloinunes> | <mailto:goncaloinunes@tecnico.ulisboa.pt> |
+| 99074  | Gonçalo Nunes     | <https://github.com/goncaloinunes> | <mailto:goncaloinunes@tecnico.ulisboa.pt> |
 | 99115  | Pedro Lobo        | <https://github.com/pedroclobo>    | <mailto:pedro.lobo@tecnico.ulisboa.pt>    |
 
 ![André](img/andre.png) ![Gonçalo](img/goncalo.png) ![Pedro](img/pedro.png)

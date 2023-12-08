@@ -23,7 +23,7 @@ This document presents installation and demonstration instructions.
 
 ## Installation
 
-To see the project in action, it is necessary to setup a virtual environment, with N networks and M machines.  
+To see the project in action, it is necessary to setup a virtual environment, with N networks and M machines.
 
 The following diagram shows the networks and machines:
 
@@ -31,56 +31,66 @@ The following diagram shows the networks and machines:
 
 ### Prerequisites
 
-All the virtual machines are based on: Linux 64-bit, Kali 2023.3  
+All the virtual machines are based on: Linux 64-bit, Kali 2023.3
 
-[Download](https://...link_to_download_installation_media) and [install](https://...link_to_installation_instructions) a virtual machine of Kali Linux 2023.3.  
-Clone the base machine to create the other machines.
-
-*(above, replace witch actual links)*
+[Download](https://cdimage.kali.org/kali-2023.4/kali-linux-2023.4-installer-amd64.iso) and [install](https://www.kali.org/docs/virtualization/install-virtualbox-guest-vm/) a virtual machine of Kali Linux 2023.3.
+Clone the base machine to create the other machines. Don't forget to choose the option **Generate new MAC addresses for all network adapters**, under **MAC Address Policy**.
 
 ### Machine configurations
 
-For each machine, there is an initialization script with the machine name, with prefix `init-` and suffix `.sh`, that installs all the necessary packages and makes all required configurations in the a clean machine.
+For each machine, there is an initialization script with the machine name, with name `script` and suffix `.sh`, that installs all the necessary packages and makes all required configurations in the clean machine.
 
 Inside each machine, use Git to obtain a copy of all the scripts and code.
 
 ```sh
-$ git clone https://github.com/tecnico-sec/cxx...
+$ git clone https://github.com/tecnico-sec/t52-andre-pedro-goncalo.git
 ```
-
-*(above, replace with link to actual repository)*
 
 Next we have custom instructions for each machine.
 
-#### Machine 1
+#### Database Machine
 
-This machine runs ...
+This machine runs the database server (PostgreSQL 16.1).
 
-*(describe what kind of software runs on this machine, e.g. a database server (PostgreSQL 16.1))*
+To setup the machine, start by adding a new **Adapter 1** (`eth0`) to the virtual machine and attach it to a new Internal Network `sw-1`.
 
-To verify:
-
-```sh
-$ setup command
-```
-
-*(replace with actual commands)*
-
-To test:
+Then, proceed by booting up the machine and cloning the repository. Then, run the following command in the root of the cloned repository:
 
 ```sh
-$ test command
+$ cd database
+$ chmod +x setup.sh
+$ sudo ./setup.sh
+$ reboot
 ```
 
-*(replace with actual commands)*
+The expected results look like the following:
 
-The expected results are ...
+```sh
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+postgresql is already the newest version (16+256).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+Synchronizing state of postgresql.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable postgresql
+ALTER ROLE
+could not change directory to "<dir>": Permission denied
+```
 
-*(explain what is supposed to happen if all goes well)*
+Any of the following error messages can be ignored:
 
-If you receive the following message ... then ...
+```sh
+could not change directory to "<dir>": Permission denied
+createdb: error: database creation failed: ERROR:  database "groove" already exists
+```
 
-*(explain how to fix some known problem)*
+After the machine reboots, running `ip a` should reveal IP `192.168.0.1` under the `eth0` interface.
+Running `sudo nmap localhost` should reveal the following open ports:
+
+```
+PORT     STATE SERVICE
+5432/tcp open  postgresql
+```
 
 #### Machine ...
 
@@ -112,7 +122,7 @@ This concludes the demonstration.
 
 ### Versioning
 
-We use [SemVer](http://semver.org/) for versioning.  
+We use [SemVer](http://semver.org/) for versioning.
 
 ### License
 

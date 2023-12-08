@@ -92,9 +92,36 @@ PORT     STATE SERVICE
 5432/tcp open  postgresql
 ```
 
-#### Machine ...
+#### Backend Machine
 
-*(similar content structure as Machine 1)*
+This machine runs the backend server (Java 17 / Spring-Boot 2.4.1).
+
+To setup the machine, start by adding a new **Adapter 1** (`eth0`) to the virtual machine and attach it to a new Internal Network `sw-1`.
+
+Then, proceed by booting up the machine and cloning the repository. Then, run the following command in the root of the cloned repository:
+
+```sh
+$ cd backend
+$ chmod +x setup.sh
+$ sudo ./setup.sh
+$ reboot
+```
+
+```sh
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+maven is already the newest version (3.8.7-1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+```
+
+After the machine reboots, running `ip a` should reveal IP `192.168.0.2` under the `eth0` interface.
+
+To start the application, run the following command in the `backend` folder of the cloned repository:
+
+```sh
+mvn clean spring-boot:run
+```
 
 ## Demonstration
 

@@ -56,6 +56,8 @@ Boot up the machine and clone the project repository.
 
 Run the following commands in the root of the cloned repository:
 
+Click "enter" to everything that is asked while creating the SSL certificate.
+
 ```sh
 $ cd database
 $ chmod +x setup.sh
@@ -92,12 +94,15 @@ The following lines should be present in the file `/etc/postgresql/16/main/postg
 ```
 listen_addresses = '*'
 port = 5432
+ssl = on
+ssl_cert_file = '/etc/ssl/certs/database.crt'
+ssl_key_file = '/etc/ssl/private/database.key'
 ```
 
 A line similar to the following should be present in the file `/etc/postgresql/16/main/pg_hba.conf`:
 
 ```
-host all all 192.168.0.0/24 scram-sha-256
+hostssl groove postgres 192.168.0.0/24 md5
 ```
 
 #### Backend Machine

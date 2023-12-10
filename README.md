@@ -87,6 +87,19 @@ PORT     STATE SERVICE
 5432/tcp open  postgresql
 ```
 
+The following lines should be present in the file `/etc/postgresql/16/main/postgresql.conf`:
+
+```
+listen_addresses = '*'
+port = 5432
+```
+
+A line similar to the following should be present in the file `/etc/postgresql/16/main/pg_hba.conf`:
+
+```
+host all all 192.168.0.0/24 scram-sha-256
+```
+
 #### Backend Machine
 
 This machine runs the backend server (Java 17 / Spring-Boot 2.4.1).

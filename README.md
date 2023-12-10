@@ -23,11 +23,25 @@ This document presents installation and demonstration instructions.
 
 ## Installation
 
-To see the project in action, it is necessary to setup a virtual environment, with 2 networks and 3 machines.
+To see the project in action, it is necessary to setup a virtual environment, with 2 networks and 4 machines.
 
 The following diagram shows the networks and machines:
 
 ![Network diagram](img/network-diagram.png)
+
+The following table shows the network topology configuration:
+
+| # Interface  |      IP       | Adapter |
+| :----------: | :-----------: | :-----: |
+| **Database** |               |
+|      1       |  192.168.0.1  |  eth0   |
+| **Backend**  |
+|      1       |  192.168.0.2  |  eth0   |
+| **Firewall** |
+|      1       | 192.168.0.254 |  eth0   |
+|      2       | 192.168.1.254 |  eth1   |
+| **Frontend** |
+|      1       |  192.168.1.1  |  eth0   |
 
 ### Prerequisites
 

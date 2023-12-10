@@ -52,39 +52,34 @@ Next we have custom instructions for each machine.
 
 This machine runs the database server (PostgreSQL 16.1).
 
-To setup the machine, start by adding a new **Adapter 1** (`eth0`) to the virtual machine and attach it to a new Internal Network `sw-1`.
+Boot up the machine and clone the project repository.
 
-Then, proceed by booting up the machine and cloning the repository. Then, run the following command in the root of the cloned repository:
+Run the following commands in the root of the cloned repository:
 
 ```sh
 $ cd database
 $ chmod +x setup.sh
 $ sudo ./setup.sh
-$ reboot
+$ shutdown now
 ```
 
-The expected results look like the following:
+The expected output should include the output from the `apt` package manager and the following lines:
 
 ```sh
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-postgresql is already the newest version (16+256).
-0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
 Synchronizing state of postgresql.service with SysV service script with /lib/systemd/systemd-sysv-install.
 Executing: /lib/systemd/systemd-sysv-install enable postgresql
+Created symlink /etc/systemd/system/multi-user.target.wants/postgresql.service → /lib/systemd/system/postgresql.service.
 ALTER ROLE
-could not change directory to "<dir>": Permission denied
 ```
 
-Any of the following error messages can be ignored:
+Before booting up the virtual machine again, replace the current **Adapter 1** with a **Internal Network** named `sw-1`.
 
-```sh
-could not change directory to "<dir>": Permission denied
-createdb: error: database creation failed: ERROR:  database "groove" already exists
-```
+Boot up the virtual machine and verify that the configuration was successful by checking the following:
 
-After the machine reboots, running `ip a` should reveal IP `192.168.0.1` under the `eth0` interface.
+Running `hostnamectl | grep 'hostname'` should reveal the hostname `database`.
+
+Running `ip a` should reveal IP `192.168.0.1` under the `eth0` interface.
+
 Running `sudo nmap localhost` should reveal the following open ports:
 
 ```

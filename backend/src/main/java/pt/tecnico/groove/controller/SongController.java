@@ -1,9 +1,9 @@
 package pt.tecnico.groove.controller;
 
+import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import pt.tecnico.groove.dto.SongDto;
 import pt.tecnico.groove.service.SongService;
 
 
@@ -13,7 +13,7 @@ public class SongController {
     private SongService songService;
 
     @GetMapping(value="/songs/{id}")
-    public SongDto getSongById(@PathVariable(value = "id") Integer id) {
+    public JsonObject getSongById(@PathVariable(value = "id") Integer id) throws Exception {
         return songService.getSongById(id);
     }
 

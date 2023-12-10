@@ -5,7 +5,10 @@ import javax.persistence.*;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import pt.tecnico.groove.domain.Owner;
 
 @Entity
@@ -90,13 +93,44 @@ public class Song {
     }
 
     public void setSongBase64(String songBase64) {
-        this.songBase64 = songBase64;
+        this.songBase64 = songBase64.trim();
     }
 
     @Override
     public String toString() {
         return "Song [id=" + id + ", owner=" + owner + ", title=" + title + ", lyrics=" + lyrics + ", format="
                 + format + ", artist=" + artist + ", songBase64=" + songBase64 + "]";
+    }
+
+    public JsonObject toJson() {
+        JsonObject json = new JsonObject();
+        JsonObject mediaObject = new JsonObject();
+
+        JsonObject mediaInfoObject = new JsonObject();
+        mediaInfoObject.addProperty("owner", owner != null ? owner.getName() : null);
+        mediaInfoObject.addProperty("format", format);
+        mediaInfoObject.addProperty("artist", artist);
+        mediaInfoObject.addProperty("title", title);
+
+        mediaObject.add("mediaInfo", mediaInfoObject);
+
+        JsonObject mediaContentObject = new JsonObject();
+
+        JsonArray lyricsArray = new JsonArray();
+        try (Scanner scanner = new Scanner(getLyrics())) {
+            while (scanner.hasNextLine()) {
+                lyricsArray.add(scanner.nextLine());
+            }
+        }
+        mediaContentObject.add("lyrics", lyricsArray);
+
+        mediaContentObject.addProperty("audioBase64", songBase64);
+
+        mediaObject.add("mediaContent", mediaContentObject);
+
+        json.add("media", mediaObject);
+
+        return json;
     }
 
 }

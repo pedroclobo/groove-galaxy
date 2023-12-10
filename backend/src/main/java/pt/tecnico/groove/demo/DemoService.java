@@ -69,8 +69,7 @@ public class DemoService {
     public void resetDemoSongs() {
         List<Song> songs = new ArrayList<>();
 
-        Song song1 = createSong("Don't Stop Me Now", "dont_stop_me_now.txt", "MP3", "Queen",
-                "dont_stop_me_now-mp3.base64");
+        Song song1 = createSong("Don't Stop Me Now", "dont_stop_me_now.txt", "MP3", "Queen", "dont_stop_me_now-mp3.base64");
         songs.add(song1);
 
         Song song2 = createSong("Hey Jude", "hey_jude.txt", "MP3", "The Beatles", "hey_jude-mp3.base64");
@@ -78,15 +77,15 @@ public class DemoService {
 
         Song song3 = createSong("Let It Be", "let_it_be.txt", "MP3", "The Beatles", "let_it_be-mp3.base64");
         songs.add(song3);
-        Song song4 = createSong("Sweet Child O' Mine", "sweet_child_o_mine.txt", "WAV", "Guns N' Roses",
-                "sweet_child_o_mine-wav.base64");
+
+        Song song4 = createSong("Sweet Child O' Mine", "sweet_child_o_mine.txt", "WAV", "Guns N' Roses", "sweet_child_o_mine-wav.base64");
         songs.add(song4);
+
         songRepository.saveAll(songs);
     }
 
     private Song createSong(String title, String lyricsFile, String format, String artist, String songBase64File) {
         Song song = new Song();
-
         song.setTitle(title);
         try {
             song.setLyrics(DemoUtils.readResource(lyricsPath + lyricsFile));

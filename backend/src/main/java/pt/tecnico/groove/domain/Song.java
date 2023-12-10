@@ -16,8 +16,8 @@ public class Song {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToMany
-    private List<Owner> owners = new ArrayList<Owner>();
+    @ManyToOne
+    private Owner owner = null;
 
     @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(255)")
     private String title;
@@ -45,12 +45,12 @@ public class Song {
         this.id = id;
     }
 
-    public List<Owner> getOwners() {
-        return owners;
+    public Owner getOwner() {
+        return owner;
     }
 
     public void addOwner(Owner owner) {
-        this.owners.add(owner);
+        this.owner = owner;
     }
 
     public String getTitle() {
@@ -95,7 +95,7 @@ public class Song {
 
     @Override
     public String toString() {
-        return "Song [id=" + id + ", owners=" + owners + ", title=" + title + ", lyrics=" + lyrics + ", format="
+        return "Song [id=" + id + ", owner=" + owner + ", title=" + title + ", lyrics=" + lyrics + ", format="
                 + format + ", artist=" + artist + ", songBase64=" + songBase64 + "]";
     }
 

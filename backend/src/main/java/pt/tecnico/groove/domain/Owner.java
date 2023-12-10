@@ -16,7 +16,7 @@ public class Owner {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "owners")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
     private List<Song> songs = new ArrayList<Song>();
 
     @Column(name = "name", nullable = false, columnDefinition = "VARCHAR(255)")

@@ -595,3 +595,5 @@ fabric.properties
 inputs/
 keys/
 outputs/
+*Zone.Identifier*
+.idea/

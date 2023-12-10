@@ -33,7 +33,7 @@ The following diagram shows the networks and machines:
 
 All the virtual machines are based on: Linux 64-bit, Kali 2023.3
 
-[Download](https://cdimage.kali.org/kali-2023.4/kali-linux-2023.4-installer-amd64.iso) and [install](https://www.kali.org/docs/virtualization/install-virtualbox-guest-vm/) a virtual machine of Kali Linux 2023.3.
+[Download](https://cdimage.kali.org/kali-2023.3/kali-linux-2023.3-installer-amd64.iso) and [install](https://www.kali.org/docs/virtualization/install-virtualbox-guest-vm/) a virtual machine of Kali Linux 2023.3.
 Clone the base machine to create the other machines. Don't forget to choose the option **Generate new MAC addresses for all network adapters**, under **MAC Address Policy**.
 
 ### Machine configurations

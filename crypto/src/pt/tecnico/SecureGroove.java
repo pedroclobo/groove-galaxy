@@ -137,27 +137,8 @@ public class SecureGroove {
      */
     private static void protect(String inputPath, String outputPath, String keyPath) throws Exception {
         Key key = readSecretKey(keyPath);
-        byte[] iv = generateIV();
-
-        JsonObject root = new JsonObject();
-
-        // Cipher media content
         JsonObject data = readJsonFile(inputPath);
-        JsonObject media = data.get("media").getAsJsonObject();
-        JsonObject mediaContent = media.get("mediaContent").getAsJsonObject();
-
-        byte[] cipheredMediaContent = cipher(mediaContent.toString().getBytes(), key, iv);
-        String base64CipheredMediaContent = Base64.getEncoder().encodeToString(cipheredMediaContent);
-
-        media.addProperty("mediaContent", base64CipheredMediaContent);
-        data.add("media", media);
-        root.add("data", data);
-
-        JsonObject metadata = createMetadata(iv);
-        root.add("metadata", metadata);
-        root.addProperty("MIC", createMIC(data, metadata, key));
-
-        writeJsonFile(outputPath, root);
+        writeJsonFile(outputPath, JsonProtector.protect(data, key));
     }
 
     /**
@@ -168,30 +149,10 @@ public class SecureGroove {
      * @param keyPath    The path to the file containing the secret key used for decryption.
      * @throws Exception If an error occurs during the decryption process.
      */
-    private static void check(String inputPath, String keyPath) throws Exception{
+    private static void check(String inputPath, String keyPath) throws Exception {
         Key key = readSecretKey(keyPath);
-        
         JsonObject root = readJsonFile(inputPath);
-
-        JsonObject data = root.get("data").getAsJsonObject();
-        JsonObject metadata = root.get("metadata").getAsJsonObject();
-        String MIC = root.get("MIC").getAsString();
-
-        String recomputedMIC = createMIC(data, metadata, key);
-
-        if (!MIC.equals(recomputedMIC)) {
-            throw new Exception("MIC does not match");
-        }
-
-        long timestamp = metadata.get("mic").getAsJsonObject().get("timestamp").getAsLong();
-        long now = System.currentTimeMillis();
-
-        // Check if MIC is older than 30 seconds
-        if (now - timestamp > MIC_TTL) {
-            throw new Exception("Message is not fresh");
-        }
-
-        System.out.println("Message is fresh and authentic");
+        JsonProtector.check(root, key);
     }
 
     /**
@@ -205,25 +166,8 @@ public class SecureGroove {
      */
     private static void unprotect(String inputPath, String outputPath, String keyPath) throws Exception {
         Key key = readSecretKey(keyPath);
-
         JsonObject root = readJsonFile(inputPath);
-
-        JsonObject data = root.get("data").getAsJsonObject();
-        JsonObject media = data.get("media").getAsJsonObject();
-        String mediaContentString = media.get("mediaContent").getAsString();
-
-        // Extract IV
-        JsonObject cipherMetadata = root.get("metadata").getAsJsonObject().get("cipher").getAsJsonObject();
-        byte[] iv = Base64.getDecoder().decode(cipherMetadata.get("initialization-vector").getAsString());
-
-        // Decipher media content
-        byte[] cipheredMediaContent = Base64.getDecoder().decode(mediaContentString);
-        byte[] mediaContentBytes = decipher(cipheredMediaContent, key, iv);
-        JsonObject mediaContent = new Gson().fromJson(new String(mediaContentBytes), JsonObject.class);
-
-        media.add("mediaContent", mediaContent);
-
-        writeJsonFile(outputPath, data);
+        writeJsonFile(outputPath, JsonProtector.unprotect(root, key));
     }
 
     /**

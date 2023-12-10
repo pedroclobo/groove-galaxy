@@ -31,19 +31,10 @@ public class Song {
     @Column(name = "artist", nullable = false, columnDefinition = "VARCHAR(255)")
     private String artist;
 
-    @Column(name = "song_path", nullable = false, columnDefinition = "VARCHAR(255)")
-    private String songPath;
+    @Column(name = "song_base64", nullable = false, columnDefinition = "TEXT")
+    private String songBase64;
 
     public Song() {
-    }
-
-    public Song(Integer id, String title, String lyrics, String format, String artist, String songPath) {
-        this.id = id;
-        this.title = title;
-        this.lyrics = lyrics;
-        this.format = format;
-        this.artist = artist;
-        this.songPath = songPath;
     }
 
     public Integer getId() {
@@ -94,18 +85,18 @@ public class Song {
         this.artist = artist;
     }
 
-    public String getSongPath() {
-        return songPath;
+    public String getSongBase64() {
+        return songBase64;
     }
 
-    public void setSongPath(String songPath) {
-        this.songPath = songPath;
+    public void setSongBase64(String songBase64) {
+        this.songBase64 = songBase64;
     }
 
     @Override
     public String toString() {
-        return "Song [id=" + id + ", title=" + title + ", lyrics=" + lyrics + ", format=" + format + ", artist="
-                + artist + ", songPath=" + songPath + "]";
+        return "Song [id=" + id + ", owners=" + owners + ", title=" + title + ", lyrics=" + lyrics + ", format="
+                + format + ", artist=" + artist + ", songBase64=" + songBase64 + "]";
     }
 
 }

@@ -25,12 +25,6 @@ public class Owner {
     @Column(name = "key_file", nullable = false, columnDefinition = "VARCHAR(255)")
     private String keyFile;
 
-    public Owner(Integer id, String name, String keyFile) {
-        this.id = id;
-        this.name = name;
-        this.keyFile = keyFile;
-    }
-
     public Owner() {
     }
 

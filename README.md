@@ -31,30 +31,43 @@ The following diagram shows the networks and machines:
 
 ### Prerequisites
 
-All the virtual machines are based on: Linux 64-bit, Kali 2023.3
+All virtual machines are based on: Linux 64-bit, Kali 2023.3
 
 [Download](https://cdimage.kali.org/kali-2023.3/kali-linux-2023.3-installer-amd64.iso) and [install](https://www.kali.org/docs/virtualization/install-virtualbox-guest-vm/) a virtual machine of Kali Linux 2023.3.
-Clone the base machine to create the other machines. Don't forget to choose the option **Generate new MAC addresses for all network adapters**, under **MAC Address Policy**.
 
 ### Machine configurations
 
-For each machine, there is an initialization script with the machine name, with name `script` and suffix `.sh`, that installs all the necessary packages and makes all required configurations in the clean machine.
+#### Base Machine
 
-Inside each machine, use Git to obtain a copy of all the scripts and code.
+This machine will be used as a base for the other machines.
+
+Boot up the machine and update the system:
+
+```sh
+$ sudo apt update
+```
+
+Use Git to obtain a copy of the `T52 GrooveGalaxy Project`:
 
 ```sh
 $ git clone https://github.com/tecnico-sec/t52-andre-pedro-goncalo.git
 ```
 
-Next we have custom instructions for each machine.
+Our repository has the necessary scripts to initialize each machine.
+
+Follow the next custom instructions to setup each machine.
+
+Link clone this VM as needed to create new machines. Don't forget to choose the option **Generate new MAC addresses for all network adapters**, under **MAC Address Policy**.
 
 #### Database Machine
 
 This machine runs the database server (PostgreSQL 16.1).
 
-Boot up the machine and clone the project repository.
+Boot up the machine.
 
-Run the following commands in the root of the cloned repository:
+If you cloned this machine from the Base VM, the system already has the project repository.
+
+Run the following commands in the root of the project repository:
 
 Click "enter" to everything that is asked while creating the SSL certificate.
 
@@ -109,9 +122,11 @@ hostssl groove postgres 192.168.0.0/24 md5
 
 This machine runs the backend server (Java 17 / Spring-Boot 2.4.1).
 
-Boot up the machine and clone the project repository.
+Boot up the machine.
 
-Run the following commands in the root of the cloned repository:
+If you cloned this machine from the Base VM, the system already has the project repository.
+
+Run the following commands in the root of the project repository:
 
 ```sh
 $ cd backend

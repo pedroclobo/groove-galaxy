@@ -2,6 +2,8 @@
 
 HOSTNAME="backend"
 DB_NAME="groove"
+IP="192.168.0.2"
+GATEWAY=""
 
 # Configure eth0 interface (sw-1)
 cat <<EOL > /etc/network/interfaces
@@ -16,7 +18,7 @@ iface lo inet loopback
 
 # sw-1
 iface eth0 inet static
-	address 192.168.0.2
+	address $IP
 	netmask 255.255.255.0
 
 EOL

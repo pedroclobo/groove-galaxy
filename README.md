@@ -104,26 +104,27 @@ host all all 192.168.0.0/24 scram-sha-256
 
 This machine runs the backend server (Java 17 / Spring-Boot 2.4.1).
 
-To setup the machine, start by adding a new **Adapter 1** (`eth0`) to the virtual machine and attach it to a new Internal Network `sw-1`.
+Boot up the machine and clone the project repository.
 
-Then, proceed by booting up the machine and cloning the repository. Then, run the following command in the root of the cloned repository:
+Run the following commands in the root of the cloned repository:
 
 ```sh
 $ cd backend
 $ chmod +x setup.sh
 $ sudo ./setup.sh
-$ reboot
+$ mvn clean spring-boot:run
+$ shutdown now
 ```
 
-```sh
-Reading package lists... Done
-Building dependency tree... Done
-Reading state information... Done
-maven is already the newest version (3.8.7-1).
-0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
-```
+The expected output should include the output from the `apt` package manager and the output from `mvn` downloading the required dependencies. The output should terminate with a **BUILD FAILURE** message, as the backend can't connect to the Postgres database server.
 
-After the machine reboots, running `ip a` should reveal IP `192.168.0.2` under the `eth0` interface.
+Before booting up the virtual machine again, replace the current **Adapter 1** with a **Internal Network** named `sw-1`.
+
+Boot up the virtual machine and verify that the configuration was successful by checking the following:
+
+Running `hostnamectl | grep 'hostname'` should reveal the hostname `backend`.
+
+Running `ip a` should reveal IP `192.168.0.2` under the `eth0` interface.
 
 To start the application, run the following command in the `backend` folder of the cloned repository:
 

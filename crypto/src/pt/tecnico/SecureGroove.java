@@ -33,7 +33,7 @@ import com.google.gson.JsonObject;
 public class SecureGroove {
 
     public static String CIPHER_ALGO = "AES";
-    public static String CIPHER_BLOCK_MODE = "CBC";
+    public static String CIPHER_BLOCK_MODE = "OFB";
     public static String CIPHER_PADDING = "PKCS5Padding";
 
     public static String CIPHER = CIPHER_ALGO + "/" + CIPHER_BLOCK_MODE + "/" + CIPHER_PADDING;

@@ -89,6 +89,10 @@ The chosen language to implement the custom cryptographic library is Java. The u
 
 #### 2.3.1. Challenge Overview
 
+The security challenge introduced the need to use a cryptographic solution that allow playback to quickly start in the middle of an audio stream, without compromising security.
+
+The original solution used the CBC block cipher mode, in which the ciphertext of a block is dependent on the ciphertext of all blocks before it. It makes it impossible to start playback in the middle of a stream, as the decryption of a block depends on the previous block. This means that the entire stream needs to be decrypted before playback can start.
+
 (_Describe the new requirements introduced in the security challenge and how they impacted your original design._)
 
 #### 2.3.2. Attacker Model
@@ -98,6 +102,8 @@ The chosen language to implement the custom cryptographic library is Java. The u
 (_Define how powerful the attacker is, with capabilities and limitations, i.e., what can he do and what he cannot do_)
 
 #### 2.3.3. Solution Design and Implementation
+
+To allow the playback to quickly start in the middle of an audio stream, the cryptographic solution was changed to use the CTR block cipher mode. This mode allows for random access, as each cipher block is generated independently from the others. This means that the decryption of a block can be done without decrypting the previous blocks, allowing for playback to start in the middle of a stream.
 
 (_Explain how your team redesigned and extended the solution to meet the security challenge, including key distribution and other security measures._)
 
@@ -114,6 +120,8 @@ The chosen language to implement the custom cryptographic library is Java. The u
 (_Offer a concluding statement, emphasizing the value of the project experience._)
 
 ## 4. Bibliography
+
+[Wikipedia - Block Cipher Modes of Operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation)
 
 (_Present bibliographic references, with clickable links. Always include at least the authors, title, "where published", and year._)
 

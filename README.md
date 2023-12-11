@@ -27,7 +27,7 @@ To see the project in action, it is necessary to setup a virtual environment, wi
 
 The following diagram shows the networks and machines:
 
-![Network diagram](img/network-diagram.png)
+![Network diagram](img/network-diagram.svg)
 
 The following table shows the network topology configuration:
 

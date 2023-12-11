@@ -1,6 +1,6 @@
 #!/bin/bash
 
-HOSTNAME="backend"
+HOSTNAME="application"
 DB_NAME="groove"
 IP="192.168.0.2"
 GATEWAY=""

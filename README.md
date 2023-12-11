@@ -76,7 +76,7 @@ Follow the next custom instructions to setup each machine.
 
 Link clone this VM as needed to create new machines. Don't forget to choose the option **Generate new MAC addresses for all network adapters**, under **MAC Address Policy**.
 
-#### Database Machine
+#### Database Server
 
 This machine runs the database server (PostgreSQL 16.1).
 
@@ -135,9 +135,9 @@ A line similar to the following should be present in the file `/etc/postgresql/1
 hostssl groove postgres 192.168.0.0/24 md5
 ```
 
-#### Backend Machine
+#### Application Server
 
-This machine runs the backend server (Java 17 / Spring-Boot 2.4.1).
+This machine runs the application server (Java 17 / Spring-Boot 2.4.1).
 
 Boot up the machine.
 
@@ -159,11 +159,11 @@ Before booting up the virtual machine again, replace the current **Adapter 1** w
 
 Boot up the virtual machine and verify that the configuration was successful by checking the following:
 
-Running `hostnamectl | grep 'hostname'` should reveal the hostname `backend`.
+Running `hostnamectl | grep 'hostname'` should reveal the hostname `application`.
 
 Running `ip a` should reveal IP `192.168.0.2` under the `eth0` interface.
 
-To start the application, run the following command in the `backend` folder of the cloned repository:
+To start the application, run the following command in the `application` folder of the cloned repository:
 
 ```sh
 mvn clean spring-boot:run

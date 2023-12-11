@@ -135,6 +135,35 @@ A line similar to the following should be present in the file `/etc/postgresql/1
 hostssl groove postgres 192.168.0.0/24 md5
 ```
 
+#### Firewall 1
+
+This machine acts as a firewall between the internal network and the DMZ, using `iptables` to manage the firewall rules.
+
+Begin by replacing the current **Adapter 1** with an **Internal Network** named `sw-1`.
+
+Add a new **Adapter 2** with an **Internal Network** named `sw-2`.
+
+Boot up the machine.
+
+If you cloned this machine from the Base VM, the system already has the project repository.
+
+Run the following commands in the root of the project repository:
+
+```sh
+$ cd firewall-1
+$ chmod +x setup.sh
+$ sudo ./setup.sh
+$ shutdown now
+```
+
+The script should have no output and exit code 0.
+
+Boot up the virtual machine and verify that the configuration was successful by checking the following:
+
+Running `hostnamectl | grep 'hostname'` should reveal the hostname `firewall-1`.
+
+Running `ip a` should reveal IP `192.168.0.254` and IP `192.168.1.254` under the `eth0` and `eth1` interfaces, respectively.
+
 #### Application Server
 
 This machine runs the application server (Java 17 / Spring-Boot 2.4.1).
@@ -168,6 +197,35 @@ To start the application, run the following command in the `application` folder 
 ```sh
 mvn clean spring-boot:run
 ```
+
+#### Firewall 2
+
+This machine acts as a firewall between the DMZ and the external network, using `iptables` to manage the firewall rules.
+
+Begin by replacing the current **Adapter 1** with an **Internal Network** named `sw-2`.
+
+Add a new **Adapter 2** with an **Internal Network** named `sw-3`.
+
+Boot up the machine.
+
+If you cloned this machine from the Base VM, the system already has the project repository.
+
+Run the following commands in the root of the project repository:
+
+```sh
+$ cd firewall-2
+$ chmod +x setup.sh
+$ sudo ./setup.sh
+$ shutdown now
+```
+
+The script should have no output and exit code 0.
+
+Boot up the virtual machine and verify that the configuration was successful by checking the following:
+
+Running `hostnamectl | grep 'hostname'` should reveal the hostname `firewall-2`.
+
+Running `ip a` should reveal IP `192.168.1.253` and IP `192.168.2.254` under the `eth0` and `eth1` interfaces, respectively.
 
 ## Demonstration
 

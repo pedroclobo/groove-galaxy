@@ -2,7 +2,7 @@
 
 HOSTNAME="database"
 IP="192.168.0.1"
-SUBNET="192.168.0.0/24"
+SUBNET="192.168.1.0/24"
 GATEWAY="192.168.0.254"
 DB_USER="postgres"
 DB_PASSWORD="postgres"

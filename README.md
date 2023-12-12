@@ -175,9 +175,12 @@ If you cloned this machine from the Base VM, the system already has the project 
 Run the following commands in the root of the project repository:
 
 ```sh
-$ cd backend
+$ cd application
 $ chmod +x setup.sh
 $ sudo ./setup.sh
+$ cd ../crypto
+$ mvn install
+$ cd ../application
 $ mvn clean spring-boot:run
 $ shutdown now
 ```

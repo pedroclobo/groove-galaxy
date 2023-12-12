@@ -3,7 +3,7 @@
 HOSTNAME="database"
 IP="192.168.0.1"
 SUBNET="192.168.0.0/24"
-GATEWAY=""
+GATEWAY="192.168.0.254"
 DB_USER="postgres"
 DB_PASSWORD="postgres"
 DB_NAME="groove"
@@ -23,6 +23,7 @@ iface lo inet loopback
 iface eth0 inet static
 	address $IP
 	netmask 255.255.255.0
+	gateway $GATEWAY
 
 EOL
 

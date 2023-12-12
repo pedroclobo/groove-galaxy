@@ -1,9 +1,7 @@
 #!/bin/bash
 
 HOSTNAME="application"
-DB_NAME="groove"
-IP="192.168.0.2"
-GATEWAY=""
+IP="192.168.1.1"
 
 # Configure eth0 interface (sw-1)
 cat <<EOL > /etc/network/interfaces
@@ -20,6 +18,8 @@ iface lo inet loopback
 iface eth0 inet static
 	address $IP
 	netmask 255.255.255.0
+	post-up ip route add 192.168.0.0/24 via 192.168.1.254 dev eth0
+	post-up ip route add 192.168.2.0/24 via 192.168.1.253 dev eth0
 
 EOL
 

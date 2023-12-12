@@ -12,7 +12,7 @@ cat <<EOL > /etc/network/interfaces
 source /etc/network/interfaces.d/*
 
 # The loopback network interface
-auto lo eth0
+auto lo eth0 eth1
 iface lo inet loopback
 
 # sw-2
@@ -26,6 +26,9 @@ iface eth1 inet static
 	netmask 255.255.255.0
 
 EOL
+
+# Enable IPv4 forwarding
+sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g" /etc/sysctl.conf
 
 # Change hostname
 sed -i "s/kali/$HOSTNAME/g" /etc/hostname

@@ -230,6 +230,37 @@ Running `hostnamectl | grep 'hostname'` should reveal the hostname `firewall-2`.
 
 Running `ip a` should reveal IP `192.168.1.253` and IP `192.168.2.254` under the `eth0` and `eth1` interfaces, respectively.
 
+#### Client
+
+This machine acts as a client by interacting with the application with a terminal user interface.
+
+Boot up the machine.
+
+If you cloned this machine from the Base VM, the system already has the project repository.
+
+Run the following commands in the root of the project repository:
+
+```sh
+$ cd client
+$ chmod +x setup.sh
+$ sudo ./setup.sh
+$ cd ../crypto
+$ mvn install
+$ cd ../client
+$ mvn compile exec:java -Dexec.mainClass"pt.tecnico.Client"
+$ shutdown now
+```
+
+The expected output should include the output from the `apt` package manager and the output from `mvn` downloading the required dependencies. The output should terminate with a **BUILD FAILURE** message, as the client is not yet able to connect to the application.
+
+Before booting up the virtual machine again, replace the current **Adapter 1** with a **Internal Network** named `sw-3`.
+
+Boot up the virtual machine and verify that the configuration was successful by checking the following:
+
+Running `hostnamectl | grep 'hostname'` should reveal the hostname `client`.
+
+Running `ip a` should reveal IP `192.168.2.1` under the `eth0` interface.
+
 ## Demonstration
 
 Now that all the networks and machines are up and running, ...

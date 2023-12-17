@@ -12,7 +12,7 @@
 
 #### 2.1.1. Design
 
-The custom cryptographic library addresses GrooveGalaxy business requirements of authenticating the song data, and ensuring the confidentiality of the song's content. The library was implemented under the assumption that the user and service share a secret symmetric key.
+The custom cryptographic library addresses GrooveGalaxy's business requirements of authenticating the song data, and ensuring the confidentiality of the song's content. The library was implemented under the assumption that the user and service share a secret symmetric key.
 
 To achieve integrity, an HMAC-SHA256 is computed over the song data and metadata (which includes the freshness token), using the shared secret key. The Base64 encoded HMAC is included in the JSON object as the value of the `MIC` key.
 
@@ -20,13 +20,13 @@ Freshness is also added to the document to prevent replay attacks. When protecti
 
 The integrity and freshness given to the document, guarantee the song data authenticity.
 
-The HMAC-SHA256 algorithm was chosen as it guarantees integrity while not using ciphers, which yeilds a better performance compared to other solutions that use ciphers, like a message integrity code. The hash is computed using the secret shared key, making the hash calculation impossible without the key. The SHA256 algorithm was chosen as it is a widely used hash function, and it is considered secure.
+The HMAC-SHA256 algorithm was chosen as it guarantees integrity while not using ciphers, which yields a better performance compared to other solutions that use ciphers, like a message integrity code. The hash is computed using the secret shared key, making the hash calculation impossible without the key. The SHA256 algorithm was chosen as it is a widely used hash function, and it is considered secure.
 
 A timestamp was used to guarantee freshness, as the sender and receiver's clock will be loosely synchronized and, unlike a nonce or a counter, it does not require any additional state to be stored.
 
 To ensure confidentiality, the song data is ciphered using the secret shared key. The chosen cipher is AES with the CTR block cipher mode and no padding. The initialization vector is randomly generated and included in the JSON object as the value of the `initialization-vector` key. A new initialization vector is generated for each document. The Base64 encoded ciphered song data is then included in the JSON object as the value of the `mediaContent` key.
 
-The AES algorithm was chosen as it a robust symmetric encryption protocol. The CTR mode was chosen as, unlike ECB, doesn't leave patterns of the plaintext in the ciphertext, as long as the initialization vector is not reused across documents. It also the advtange of providing resynchronization which, unlike with CBC, allows for random access, suitable for scenarios where playback needs to start in the middle of a stream. As it is a stream cipher, padding is not required, providing a better performance in this regard compared to other block ciphers.
+The AES algorithm was chosen as it a robust symmetric encryption protocol. The CTR mode was chosen as, unlike ECB, doesn't leave patterns of the plaintext in the ciphertext, as long as the initialization vector is not reused across documents. It also the advantage of providing resynchronization which, unlike with CBC, allows for random access, suitable for scenarios where playback needs to start in the middle of a stream. As it is a stream cipher, padding is not required, providing a better performance in this regard compared to other block ciphers.
 
 An example of a protected file is shown below:
 
@@ -65,7 +65,7 @@ An example of a protected file is shown below:
 
 #### 2.1.2. Implementation
 
-The chosen language to implement the custom cryptographic library is Java. The used cyptographic library is the Java Cryptography API.
+The chosen language to implement the custom cryptographic library is Java. The used cryptographic library is the Java Cryptography API.
 
 (_Detail the implementation process, including the programming language and cryptographic libraries used._)
 

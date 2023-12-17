@@ -15,7 +15,7 @@ public class DemoUtils {
 
     public void resetDemoInfo() {
         demoService.resetDemoSongs();
-        demoService.resetDemoOwners();
+        demoService.resetDemoUsers();
     }
 
     public static String readResource(String resourcePath) throws IOException {

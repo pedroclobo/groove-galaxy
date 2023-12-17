@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import pt.tecnico.groove.domain.Owner;
+import pt.tecnico.groove.domain.User;
 
 @Entity
 @Table(name = "song")
@@ -20,7 +20,7 @@ public class Song {
     private Integer id;
 
     @ManyToOne
-    private Owner owner = null;
+    private User user = null;
 
     @Column(name = "title", nullable = false, columnDefinition = "VARCHAR(255)")
     private String title;
@@ -48,12 +48,12 @@ public class Song {
         this.id = id;
     }
 
-    public Owner getOwner() {
-        return owner;
+    public User getUser() {
+        return user;
     }
 
-    public void addOwner(Owner owner) {
-        this.owner = owner;
+    public void addUser(User user) {
+        this.user = user;
     }
 
     public String getTitle() {
@@ -98,7 +98,7 @@ public class Song {
 
     @Override
     public String toString() {
-        return "Song [id=" + id + ", owner=" + owner + ", title=" + title + ", lyrics=" + lyrics + ", format="
+        return "Song [id=" + id + ", user=" + user + ", title=" + title + ", lyrics=" + lyrics + ", format="
                 + format + ", artist=" + artist + ", songBase64=" + songBase64 + "]";
     }
 
@@ -107,7 +107,7 @@ public class Song {
         JsonObject mediaObject = new JsonObject();
 
         JsonObject mediaInfoObject = new JsonObject();
-        mediaInfoObject.addProperty("owner", owner != null ? owner.getName() : null);
+        mediaInfoObject.addProperty("owner", user != null ? user.getName() : null);
         mediaInfoObject.addProperty("format", format);
         mediaInfoObject.addProperty("artist", artist);
         mediaInfoObject.addProperty("title", title);

@@ -11,10 +11,10 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import java.time.LocalDateTime;
 import java.util.List;
 
-import pt.tecnico.groove.domain.Owner;
+import pt.tecnico.groove.domain.User;
 import pt.tecnico.groove.domain.Song;
 
-import pt.tecnico.groove.repository.OwnerRepository;
+import pt.tecnico.groove.repository.UserRepository;
 import pt.tecnico.groove.repository.SongRepository;
 
 import pt.tecnico.groove.demo.DemoUtils;

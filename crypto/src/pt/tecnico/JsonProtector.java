@@ -23,6 +23,43 @@ public class JsonProtector {
     public static String MAC_ALGO = "HmacSHA256";
     public static long MIC_TTL = 30000; // 30 seconds
 
+    // Used to encrypt user key with 'master' key
+    public static JsonObject protectKey(Key userKey, Key key) throws Exception {
+        byte[] iv = generateIV();
+
+        JsonObject root = new JsonObject();
+
+        byte[] chipheredKey = cipher(userKey.getEncoded(), key, iv);
+        String base64ChipheredKey = Base64.getEncoder().encodeToString(chipheredKey);
+
+        root.addProperty("userkey", base64ChipheredKey);
+
+        JsonObject metadata = createMetadata(iv);
+        root.add("metadata", metadata);
+        root.addProperty("MIC", createMIC(root, metadata, key));
+
+        return root;
+    }
+
+    public static Key unprotectKey(JsonObject root, Key masterKey) throws Exception {
+        JsonObject metadata = root.get("metadata").getAsJsonObject();
+        String MIC = root.get("MIC").getAsString();
+
+        System.out.println("MIC: " + MIC);
+
+        // Extract IV
+        JsonObject cipherMetadata = metadata.get("cipher").getAsJsonObject();
+        System.out.println("cipherMetadata: " + cipherMetadata);
+        byte[] iv = Base64.getDecoder().decode(cipherMetadata.get("initialization-vector").getAsString());
+
+        // Decipher user key
+        byte[] cipheredUserKey = Base64.getDecoder().decode(root.get("userkey").getAsString());
+        byte[] userKeyBytes = decipher(cipheredUserKey, masterKey, iv);
+
+
+        return new SecretKeySpec(userKeyBytes, "AES");
+    }
+
     public static JsonObject protect(JsonObject data, Key key) throws Exception {
         byte[] iv = generateIV();
 

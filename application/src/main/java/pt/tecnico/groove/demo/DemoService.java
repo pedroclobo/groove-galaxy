@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import pt.tecnico.groove.domain.Owner;
+import pt.tecnico.groove.domain.User;
 import pt.tecnico.groove.domain.Song;
 
-import pt.tecnico.groove.repository.OwnerRepository;
+import pt.tecnico.groove.repository.UserRepository;
 import pt.tecnico.groove.repository.SongRepository;
 
 import java.util.ArrayList;
@@ -17,52 +17,51 @@ import java.io.IOException;
 @Service
 public class DemoService {
     @Autowired
-    private OwnerRepository ownerRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private SongRepository songRepository;
 
     private final String lyricsPath = "/songs/lyrics/";
     private final String songPath = "/songs/base64/";
-    private final String keyPath = "/keys/";
 
     @Transactional
-    public void resetDemoOwners() {
-        List<Owner> owners = new ArrayList<>();
+    public void resetDemoUsers() {
+        List<User> users = new ArrayList<>();
 
-        Owner owner1 = new Owner();
-        owner1.setName("André");
-        owner1.setKeyFile(keyPath + "aes-key-1.key");
-        owners.add(owner1);
+        User user1 = new User();
+        user1.setName("André");
+        user1.setMasterkeyFile("aes-key-1.key");
+        users.add(user1);
 
-        Owner owner2 = new Owner();
-        owner2.setName("Gonçalo");
-        owner2.setKeyFile(keyPath + "aes-key-2.key");
-        owners.add(owner2);
+        User user2 = new User();
+        user2.setName("Gonçalo");
+        user2.setMasterkeyFile("aes-key-2.key");
+        users.add(user2);
 
-        Owner owner3 = new Owner();
-        owner3.setName("Pedro");
-        owner3.setKeyFile(keyPath + "aes-key-3.key");
-        owners.add(owner3);
+        User user3 = new User();
+        user3.setName("Pedro");
+        user3.setMasterkeyFile("aes-key-3.key");
+        users.add(user3);
 
-        Owner owner4 = new Owner();
-        owner4.setName("Miguel");
-        owner4.setKeyFile(keyPath + "aes-key-4.key");
-        owners.add(owner4);
+        User user4 = new User();
+        user4.setName("Miguel");
+        user4.setMasterkeyFile("aes-key-4.key");
+        users.add(user4);
 
         Song song1 = songRepository.findById(1).orElseThrow();
-        owner1.addSong(song1);
+        user1.addSong(song1);
 
         Song song2 = songRepository.findById(2).orElseThrow();
-        owner2.addSong(song2);
+        user2.addSong(song2);
 
         Song song3 = songRepository.findById(3).orElseThrow();
-        owner3.addSong(song3);
+        user3.addSong(song3);
 
         Song song4 = songRepository.findById(4).orElseThrow();
-        owner4.addSong(song4);
+        user4.addSong(song4);
 
-        ownerRepository.saveAll(owners);
+        userRepository.saveAll(users);
     }
 
     @Transactional

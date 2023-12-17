@@ -75,15 +75,29 @@ The chosen language to implement the custom cryptographic library is Java. The u
 
 #### 2.2.1. Network and Machine Setup
 
-(_Provide a brief description of the built infrastructure._)
+The built infrastructure consists of a set of main machines, in three distinct networks, and two firewall machines.
 
-(_Justify the choice of technologies for each server._)
+The main machines include a database machine, an application machine, which runs the application, and a client machine that interacts with the application through a command-line interface.
+
+The database machine, which runs PostgreSQL 16.1, is part of an internal network, protected by a firewall. PostgreSQl was used as it is a powerful open-source relational database management system. It is also a familiar DBMS, used in previous courses.
+
+The application machine runs SpringBoot 2.4.1. It is part of a DMZ, that is exposed to request from the external network. Between the traffic between the DMZ and the external network are controlled by a firewall. SpringBoot was used as it is a popular Java framework to build web applications. It has a simple configuration and enables a rapid development process. It is also a familiar technology, used in previous courses.
+
+The client machine runs a CLI to interact with the application server. It is part of the external network. Java was used as it is reliable programming language and synergizes well with the other technologies used.
+
+The two firewall machines control the traffic between the internal network and the DMZ, and between the DMZ and the external network, respectively. The `iptables` utility was used to configure the firewall rules as it is the de-facto standard for managing packet filter rules of the Linux kernel firewall.
 
 #### 2.2.2. Server Communication Security
 
-(_Discuss how server communications were secured, including the secure channel solutions implemented and any challenges encountered._)
+To secure the server communications, TLS was used as all the picked technologies used supported it.
 
-(_Explain what keys exist at the start and how are they distributed?_)
+The communication between the internal network (the database server) and the DMZ (the application server) are secured by TLS. The configuration required to set up SSL in PostgreSQL was seamless, as it was only required to point to the key file, root CA and entity certificate files.
+
+To secure the communication between the external network (the client) and the DMZ (the application server), HTTPS (HTTP over TLS) was used. The used configuration supports server and client authentication. The configuration of HTTPS in SpringBoot was challenging because, as a Java framework, it prefers manipulating Java's preferred key storage file format, the KeyStore. The previous configuration of TLS for securing the communication between the database and the application was set up using the `openssl`. However, for a better experience, the `keytool` was the chosen option as offers additional options for manipulating Java's KeyStore.
+
+The keys necessary for the TLS/HTTPS configuration are generated while setting up the machines. The generated keys on the three machines, the database server, application server and client, are RSA key pairs with 2048 bits. The keys are used to generate a certificate sign request and, in the case of the application server, a self-signed certificate. These certificates are then distributed during setup using `scp`.
+
+The certificate sign requests are then signed by the application server, which acts as a CA. The certificates are then exchanged again, using `scp`.
 
 ### 2.3. Security Challenge
 

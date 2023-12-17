@@ -2,34 +2,38 @@ package pt.tecnico;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Scanner;
+
+import java.net.URL;
+import javax.net.ssl.HttpsURLConnection;
 
 public class Client {
 
-    private static final String URL = "http://192.168.1.1:8080";
-    private static final String ENDPOINT = "/songs/";
+    private static final String URL = "https://192.168.1.1:8443/songs/";
 
     public static void main(String[] args) {
         try {
+            System.setProperty("javax.net.ssl.keyStore", "client.p12");
+            System.setProperty("javax.net.ssl.keyStorePassword", "changeme");
+            System.setProperty("javax.net.ssl.trustStore", "client-keystore.jks");
+            System.setProperty("javax.net.ssl.trustStorePassword", "changeme");
 
             Scanner scanner = new Scanner(System.in);
 
             while (true) {
-
-                System.out.print("Enter the music id (-1) to exit: ");
+                System.out.print("Enter the music id ('exit' to exit): ");
                 String musicId = scanner.nextLine().trim();
-                if (musicId.equals("-1")) {
+                if (musicId.equalsIgnoreCase("exit")) {
                     return;
                 }
-                String url = URL + ENDPOINT + musicId;
-                URL obj = new URL(url);
+
+                // Construct the URL
+                URL url = new URL(URL + musicId);
 
                 // Open a connection to the URL
-                HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
-                // Set the request method to GET
+                // Set the request method to GET (or other HTTP methods as needed)
                 connection.setRequestMethod("GET");
 
                 // Get the response code
@@ -37,20 +41,23 @@ public class Client {
                 System.out.println("Response Code: " + responseCode);
 
                 // Read the response
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                StringBuilder response = new StringBuilder();
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+                    String line;
+                    StringBuilder response = new StringBuilder();
 
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+
+                    // Print the response
+                    System.out.println("Response: " + response.toString());
                 }
-                reader.close();
 
-                // Print the response
-                System.out.println("Response: " + response);
+                // Close the connection
+                connection.disconnect();
             }
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

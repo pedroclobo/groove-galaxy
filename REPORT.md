@@ -135,7 +135,9 @@ To allow the playback to quickly start in the middle of an audio stream, the cry
 
 ## 4. Bibliography
 
-[Wikipedia - Block Cipher Modes of Operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation)
+- [Block Cipher Modes of Operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation), by Wikipedia
+- [Transport Layer Security](https://en.wikipedia.org/wiki/Transport_Layer_Security), by Wikipedia
+- [HTTPS](https://en.wikipedia.org/wiki/HTTPS), by Wikipedia
 
 (_Present bibliographic references, with clickable links. Always include at least the authors, title, "where published", and year._)
 

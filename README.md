@@ -23,7 +23,7 @@ This document presents installation and demonstration instructions.
 
 ## Installation
 
-To see the project in action, it is necessary to setup a virtual environment, with 3 networks and 5 machines.
+To see the project in action, it is necessary to set up a virtual environment, with 3 networks and 5 machines.
 
 The following diagram shows the networks and machines:
 

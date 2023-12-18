@@ -19,8 +19,6 @@ It offers insights into the rationale behind these choices, the project's archit
 
 This document presents installation and demonstration instructions.
 
-*(adapt all of the following to your project, changing to the specific Linux distributions, programming languages, libraries, etc)*
-
 ## Installation
 
 To see the project in action, it is necessary to set up a virtual environment, with 3 networks and 5 machines.
@@ -362,9 +360,10 @@ This concludes the demonstration.
 
 ### Links to Used Tools and Libraries
 
-- [Java 11.0.16.1](https://openjdk.java.net/)
-- [Maven 3.9.5](https://maven.apache.org/)
-- ...
+- [Java 17.0.8](https://openjdk.java.net/)
+- [Maven 3.8.7](https://maven.apache.org/)
+- [PostgreSQL 16.1](https://www.postgresql.org/)
+- [Spring Boot 2.4.1](https://spring.io/projects/spring-boot)
 
 ### Versioning
 
@@ -373,8 +372,6 @@ We use [SemVer](http://semver.org/) for versioning.
 ### License
 
 This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) for details.
-
-*(switch to another license, or no license, as you see fit)*
 
 ----
 END OF README

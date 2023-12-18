@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import pt.tecnico.groove.domain.User;
 import pt.tecnico.groove.repository.UserRepository;
+import pt.tecnico.groove.domain.Song;
+import pt.tecnico.groove.repository.SongRepository;
 
 import pt.tecnico.AESKeyGenerator;
 import pt.tecnico.groove.service.KeyService;
@@ -17,6 +19,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private SongRepository songRepository;
 
     public JsonObject getAllUsers() throws Exception {
         JsonObject json = new JsonObject();
@@ -47,5 +52,19 @@ public class UserService {
         Key masterKey = KeyService.readSecretKey(user.getMasterKeyFile());
 
         return KeyService.protectKey(key, masterKey);
+    }
+
+    public JsonObject getAllUserSongs(Integer id) throws Exception {
+        JsonObject json = new JsonObject();
+        JsonObject songsObject = new JsonObject();
+
+        User user = userRepository.findById(id).orElseThrow();
+
+        for (Song song : user.getSongs()) {
+            songsObject.addProperty(song.getId().toString(), song.getTitle());
+        }
+
+        json.add("songs", songsObject);
+        return json;
     }
 }

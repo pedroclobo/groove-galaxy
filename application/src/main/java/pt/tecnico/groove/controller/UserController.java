@@ -21,4 +21,9 @@ public class UserController {
     public JsonObject createUserKey(@PathVariable(value = "id") Integer id) throws Exception {
         return userService.createUserKey(id);
     }
+
+    @GetMapping(value="/user/{id}/songs")
+    public JsonObject getAllUserSongs(@PathVariable(value = "id") Integer id) throws Exception {
+        return userService.getAllUserSongs(id);
+    }
 }

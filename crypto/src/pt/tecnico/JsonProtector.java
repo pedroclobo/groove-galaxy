@@ -45,7 +45,12 @@ public class JsonProtector {
         JsonObject metadata = root.get("metadata").getAsJsonObject();
         String MIC = root.get("MIC").getAsString();
 
-        System.out.println("MIC: " + MIC);
+        root.remove("MIC");
+        String recomputedMIC = createMIC(root, metadata, masterKey);
+
+        if (!MIC.equals(recomputedMIC)) {
+            throw new Exception("MIC does not match");
+        }
 
         // Extract IV
         JsonObject cipherMetadata = metadata.get("cipher").getAsJsonObject();

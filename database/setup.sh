@@ -32,6 +32,8 @@ sed -i "s/kali/$HOSTNAME/g" /etc/hostname
 sed -i "s/kali/$HOSTNAME/g" /etc/hosts
 
 # Install dependencies
+echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
+echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
 apt install postgresql-16 iptables-persistent -y
 
 # Generate RSA key pair
@@ -90,6 +92,7 @@ sudo -u postgres psql -c "ALTER USER $DB_USER WITH PASSWORD '$DB_PASSWORD';"
 sudo -u postgres createdb $DB_NAME
 
 # Apply firewall rules
+iptables -F
 iptables -A FORWARD -j DROP # drop all forwarded traffic
 iptables -A INPUT -s 192.168.1.0/24 -p tcp --dport 5432 -j ACCEPT # accept traffic from DMZ to port 5432
 iptables -A INPUT -j DROP # drop all other incoming packets
@@ -106,3 +109,6 @@ sh -c 'ip6tables-save > /etc/iptables/rules.v6'
 
 # Persist firewall rules
 systemctl enable --now netfilter-persistent.service
+
+# Discard current firewall rules
+iptables -F

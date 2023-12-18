@@ -5,6 +5,8 @@ IP0="192.168.1.253"
 IP1="192.168.2.254"
 
 # Install dependencies
+echo iptables-persistent iptables-persistent/autosave_v4 boolean true | debconf-set-selections
+echo iptables-persistent iptables-persistent/autosave_v6 boolean true | debconf-set-selections
 apt install iptables-persistent -y
 
 # Configure eth0 and eth1 interfaces (sw-2, sw-3)
@@ -38,6 +40,7 @@ sed -i "s/kali/$HOSTNAME/g" /etc/hostname
 sed -i "s/kali/$HOSTNAME/g" /etc/hosts
 
 # Apply rules
+iptables -F
 iptables -A INPUT -j DROP # block all input traffic
 iptables -A OUTPUT -j DROP # block all output traffic
 iptables -A FORWARD -s 192.168.1.0/24 -d 192.168.2.0/24 -p tcp --sport 8443 -j ACCEPT # allow traffic from DMZ to the client on source port 8443

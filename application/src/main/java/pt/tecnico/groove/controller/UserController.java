@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import pt.tecnico.groove.service.FamilyService;
 import pt.tecnico.groove.service.UserService;
 
 
@@ -11,6 +12,9 @@ import pt.tecnico.groove.service.UserService;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private FamilyService familyService;
 
     @GetMapping(value="/users")
     public JsonObject getAllUsers() throws Exception {
@@ -25,5 +29,25 @@ public class UserController {
     @GetMapping(value="/user/{id}/songs")
     public JsonObject getAllUserSongs(@PathVariable(value = "id") Integer id) throws Exception {
         return userService.getAllUserSongs(id);
+    }
+
+    @PostMapping(value="/user/{id}/create_family")
+    public JsonObject createFamily(@PathVariable(value = "id") Integer id) throws Exception {
+        return familyService.createFamily(id);
+    }
+
+    @PostMapping(value="/user/{id}/add_to_family/{user_id}")
+    public JsonObject addUserToFamily(@PathVariable(value = "id") Integer id, @PathVariable(value = "user_id") Integer user_id) throws Exception {
+        return familyService.addUserToFamily(id, user_id);
+    }
+
+    @GetMapping(value="/user/{id}/family")
+    public JsonObject getUserFamily(@PathVariable(value = "id") Integer id) throws Exception {
+        return userService.getFamily(id);
+    }
+
+    @GetMapping(value="/user/{id}/get_family_key")
+    public JsonObject getFamilyKey(@PathVariable(value = "id") Integer id) throws Exception {
+        return userService.getFamilyKey(id);
     }
 }

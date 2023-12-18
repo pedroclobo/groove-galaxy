@@ -29,6 +29,9 @@ public class User {
 
     @Column(name = "user_key_file", nullable = true, columnDefinition = "VARCHAR(255)")
     private String userkeyFile;
+    
+    @ManyToOne
+    private Family family = null;
 
     public User() {
     }
@@ -72,6 +75,14 @@ public class User {
 
     public void setUserkeyFile(String userkeyFile) {
         this.userkeyFile = userkeyFile;
+    }
+
+    public Family getFamily(){
+        return family;
+    }
+
+    public void setFamily(Family family){
+        this.family = family;
     }
 
     @Override

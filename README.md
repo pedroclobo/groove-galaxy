@@ -229,10 +229,6 @@ hostssl groove postgres 192.168.0.0/24 md5
 
 This machine acts as a firewall between the internal network and the DMZ, using `iptables` to manage the firewall rules.
 
-Begin by replacing the current **Adapter 1** with an **Internal Network** named `sw-1`.
-
-Add a new **Adapter 2** with an **Internal Network** named `sw-2`.
-
 Boot up the machine.
 
 If you cloned this machine from the Base VM, the system already has the project repository.
@@ -248,6 +244,10 @@ $ shutdown now
 
 The script should have no output and exit code 0.
 
+Before booting up the machine, replace the current **Adapter 1** with an **Internal Network** named `sw-1`.
+
+Add a new **Adapter 2** with an **Internal Network** named `sw-2`.
+
 Boot up the virtual machine and verify that the configuration was successful by checking the following:
 
 Running `hostnamectl | grep 'hostname'` should reveal the hostname `firewall-1`.
@@ -257,10 +257,6 @@ Running `ip a` should reveal IP `192.168.0.254` and IP `192.168.1.254` under the
 #### Firewall 2
 
 This machine acts as a firewall between the DMZ and the external network, using `iptables` to manage the firewall rules.
-
-Begin by replacing the current **Adapter 1** with an **Internal Network** named `sw-2`.
-
-Add a new **Adapter 2** with an **Internal Network** named `sw-3`.
 
 Boot up the machine.
 
@@ -276,6 +272,10 @@ $ shutdown now
 ```
 
 The script should have no output and exit code 0.
+
+Before booting up the machine, replace the current **Adapter 1** with an **Internal Network** named `sw-2`.
+
+Add a new **Adapter 2** with an **Internal Network** named `sw-3`.
 
 Boot up the virtual machine and verify that the configuration was successful by checking the following:
 

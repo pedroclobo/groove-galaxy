@@ -4,6 +4,9 @@ HOSTNAME="firewall-1"
 IP0="192.168.0.254"
 IP1="192.168.1.254"
 
+# Install dependencies
+apt install iptables-persistent -y
+
 # Configure eth0 and eth1 interfaces (sw-1, sw-2)
 cat <<EOL > /etc/network/interfaces
 # This file describes the network interfaces available on your system
@@ -33,3 +36,20 @@ sed -i "s/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g" /etc/sysctl.conf
 # Change hostname
 sed -i "s/kali/$HOSTNAME/g" /etc/hostname
 sed -i "s/kali/$HOSTNAME/g" /etc/hosts
+
+# Apply rules
+iptables -A INPUT -j DROP # block all input traffic
+iptables -A OUTPUT -j DROP # block all output traffic
+iptables -A FORWARD -s 192.168.0.0/24 -d 192.168.1.0/24 -p tcp --sport 5432 -j ACCEPT # allow traffic from database to the DMZ on source port 5432
+iptables -A FORWARD -s 192.168.1.0/24 -d 192.168.0.0/24 -p tcp --dport 5432 -j ACCEPT # allow traffic from DMZ to database on destination port 5432
+iptables -A FORWARD -j DROP # block all other traffic
+ip6tables -A INPUT -j DROP # block all input ipv6 traffic
+ip6tables -A FORWARD -j DROP # block all forwarded ipv6 traffic
+ip6tables -A OUTPUT -j DROP # block all output ipv6 traffic
+
+# Save rules
+sh -c 'iptables-save > /etc/iptables/rules.v4'
+sh -c 'ip6tables-save > /etc/iptables/rules.v6'
+
+# Persist rules
+systemctl enable --now netfilter-persistent.service

@@ -138,4 +138,24 @@ sed -i "s/kali/$HOSTNAME/g" /etc/hostname
 sed -i "s/kali/$HOSTNAME/g" /etc/hosts
 
 # Install dependencies
-apt install maven -y
+apt install maven iptables-persistent -y
+
+# Apply firewall rules
+iptables -A FORWARD -j DROP # drop all forwarded traffic
+iptables -A INPUT -s 192.168.0.0/24 -p tcp --sport 5432 -j ACCEPT # accept traffic from internal network from port 5432
+iptables -A INPUT -s 192.168.2.0/24 -p tcp --dport 8443 -j ACCEPT # accept traffic from external network to port 8443
+iptables -A INPUT -j DROP # drop all other incoming packets
+iptables -A OUTPUT -d 192.168.2.0/24 -m state --state NEW -j DROP # don't start new connections with external network
+iptables -A OUTPUT -d 192.168.2.0/24 -p tcp --sport 8443 -j ACCEPT # allow traffic from established connections from port 8443 to external network
+iptables -A OUTPUT -d 192.168.0.0/24 -p tcp --dport 5432 -j ACCEPT # allow traffic to internal network to port 5432
+iptables -A OUTPUT -j DROP # drop all other output traffic
+ip6tables -A INPUT -j DROP # block all input ipv6 traffic
+ip6tables -A FORWARD -j DROP # block all forwarded ipv6 traffic
+ip6tables -A OUTPUT -j DROP # block all output ipv6 traffic
+
+# Save firewall rules
+sh -c 'iptables-save > /etc/iptables/rules.v4'
+sh -c 'ip6tables-save > /etc/iptables/rules.v6'
+
+# Persist firewall rules
+systemctl enable --now netfilter-persistent.service

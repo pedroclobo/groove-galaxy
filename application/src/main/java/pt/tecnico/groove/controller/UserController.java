@@ -45,4 +45,9 @@ public class UserController {
     public JsonObject getFamilyKey(@PathVariable(value = "id") Integer id) throws Exception {
         return userService.getFamilyKey(id);
     }
+
+    @PostMapping(value="/user/{id}/remove_from_family/{user_id}")
+    public JsonObject removeUserFromFamily(@PathVariable(value = "id") Integer id, @PathVariable(value = "user_id") Integer user_id) throws Exception {
+        return familyService.removeUserFromFamily(id, user_id);
+    }
 }

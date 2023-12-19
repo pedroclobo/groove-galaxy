@@ -55,6 +55,10 @@ public class Family {
         return users;
     }
 
+    public Boolean hasUser(User user) {
+        return users.contains(user);
+    }
+
     public void addUser(User user) throws Exception {
         if(this.owner.equals(user)) {
             throw new Exception("User is already the owner of the family");
@@ -65,6 +69,14 @@ public class Family {
         }
 
         this.users.add(user);
+    }
+
+    public void removeUser(User user) throws Exception {
+        if (!this.hasUser(user)) {
+            throw new Exception("User " + user.getName() + " with id " + user.getId() + " is not in this family");
+        }
+
+        this.users.remove(user);
     }
 
     public JsonObject toJson() {

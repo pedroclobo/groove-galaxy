@@ -13,6 +13,7 @@ import java.util.Scanner;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
+import pt.tecnico.commands.ListSongsCommand;
 import pt.tecnico.menus.MenuInvoker;
 import pt.tecnico.commands.MenuCommand;
 import pt.tecnico.commands.LoginCommand;
@@ -37,6 +38,11 @@ public class Client {
 
         LoginCommand loginCommand = new LoginCommand(URL);
         loginCommand.execute();
-        System.out.println("Logged in as " + loginCommand.getUserId());
+        int userId = loginCommand.getUserId();
+
+        ListSongsCommand command = new ListSongsCommand(URL, userId);
+        command.execute();
+
+        System.out.println("Song id: " + command.getSongId());
     }
 }

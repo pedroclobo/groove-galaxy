@@ -2,9 +2,17 @@
 
 ## 1. Introduction
 
-(_Provide a brief overview of your project, including the business scenario and the main components: secure documents, infrastructure, and security challenge._)
+This project implements a secure business solution for the GrooveGalaxy retail.
 
-(_Include a structural diagram, in UML or other standard notation._)
+GrooveGalaxy is an online music store that sells songs in a custom format. It allows users to search and browse through a wide range of songs, artists and genres. It offers choices in file formats like WAV or FLAC, suitable for various devices. GrooveGalaxy also offers a personal account feature, enabling users to manage their purchases and preferences, combining convenience, variety, and personalization.
+
+This project is divided in three main components: **secure documents**, **infrastructure** and **security challenge**.
+
+The secure documents component protects the core business's documents, that lacks protection, with the use of a custom cryptographic library. The solution provides confidentiality, as only the song's owner can access its content. It also provides authenticity of the song data, by ensuring integrity and freshness. The implemented solution is detailed in the [Secure Document Format section](#21-secure-document-format).
+
+The infrastructure component includes the installation and configuration of servers to support the business scenario. This includes the setup of 3 networks, with 5 machines. This includes an internal network (which contains a database server), a DMZ (which contains an application server) and an external network (which contains a client). A firewall monitors and filters traffic between the internal and DMZ networks as does another firewall between the DMZ and external network. The secure the communication between the core machines, an extra layer of protection is added in the form of secure channels. TLS and HTTPS are used between the internal network and DMZ and between the DMZ and external network, respectively. The infrastructure implementation is detailed in the [Infrastructure section] (#22-infrastructure).
+
+The security challenge component introduces new requirements, impacting the already developed solution. There is now the need to use a cryptographic solution to quickly start in the middle of an audio stream, without compromising security. The concept of family was also added, where individuals can be members of each family, and a protected song should be accessible to all members. The implemented solution required modifying the custom cryptographic library and devising a dynamic key distribution mechanism. The implemented solution to the security challenge is detailed in the [Security Challenge section](#23-security-challenge).
 
 ## 2. Project Development
 
@@ -13,6 +21,8 @@
 #### 2.1.1. Design
 
 The custom cryptographic library addresses GrooveGalaxy's business requirements of authenticating the song data, and ensuring the confidentiality of the song's content. The library was implemented under the assumption that the user and service share a secret symmetric key.
+
+##### 2.1.1.1 Integrity
 
 To achieve integrity, an HMAC-SHA256 is computed over the song data and metadata (which includes the freshness token), using the shared secret key. The Base64 encoded HMAC is included in the JSON object as the value of the `MIC` key.
 
@@ -24,9 +34,13 @@ The HMAC-SHA256 algorithm was chosen as it guarantees integrity while not using 
 
 A timestamp was used to guarantee freshness, as the sender and receiver's clock will be loosely synchronized and, unlike a nonce or a counter, it does not require any additional state to be stored.
 
+##### 2.1.1.2 Confidentiality
+
 To ensure confidentiality, the song data is ciphered using the secret shared key. The chosen cipher is AES with the CTR block cipher mode and no padding. The initialization vector is randomly generated and included in the JSON object as the value of the `initialization-vector` key. A new initialization vector is generated for each document. The Base64 encoded ciphered song data is then included in the JSON object as the value of the `mediaContent` key.
 
 The AES algorithm was chosen as it a robust symmetric encryption protocol. The CTR mode was chosen as, unlike ECB, doesn't leave patterns of the plaintext in the ciphertext, as long as the initialization vector is not reused across documents. It also the advantage of providing resynchronization which, unlike with CBC, allows for random access, suitable for scenarios where playback needs to start in the middle of a stream. As it is a stream cipher, padding is not required, providing a better performance in this regard compared to other block ciphers.
+
+##### 2.1.1.3 Protected Document Format
 
 An example of a protected file is shown below:
 
@@ -79,25 +93,61 @@ The built infrastructure consists of a set of main machines, in three distinct n
 
 The main machines include a database machine, an application machine, which runs the application, and a client machine that interacts with the application through a command-line interface.
 
-The database machine, which runs PostgreSQL 16.1, is part of an internal network, protected by a firewall. PostgreSQl was used as it is a powerful open-source relational database management system. It is also a familiar DBMS, used in previous courses.
+![Network Topology Diagram](img/network-diagram.svg)
 
-The application machine runs SpringBoot 2.4.1. It is part of a DMZ, that is exposed to request from the external network. Between the traffic between the DMZ and the external network are controlled by a firewall. SpringBoot was used as it is a popular Java framework to build web applications. It has a simple configuration and enables a rapid development process. It is also a familiar technology, used in previous courses.
+##### 2.2.1.1 Internal Network
 
-The client machine runs a CLI to interact with the application server. It is part of the external network. Java was used as it is reliable programming language and synergizes well with the other technologies used.
+The internal network is composed of machines that are not meant to be exposed to the external network. For simplicity reasons, the internal network consists of one core machine, the database machine, which runs PostgreSQL 16.1. PostgreSQL was used as it is a powerful open-source relational database management system. It is also a familiar DBMS, used in previous courses.
 
-The two firewall machines control the traffic between the internal network and the DMZ, and between the DMZ and the external network, respectively. The `iptables` utility was used to configure the firewall rules as it is the de-facto standard for managing packet filter rules of the Linux kernel firewall.
+To shield the internal network from outside traffic, a firewall is used to filter incoming and outgoing packets. The `iptables` utility was used to configure the firewall rules as it is the de-facto standard for managing packet filter rules of the Linux kernel firewall. The configured rules enforce the following policy:
+
+- All TCP traffic from the internal network at port 5432 to the DMZ is allowed.
+- All TCP traffic from the DMZ to the internal network, to port 5432, is allowed.
+- All other traffic, including IPv6, is blocked.
+
+The database server also has configured firewall rules. This offers an extra layer of protection as if the firewall gets compromised and its rules disabled, the database server is not immediately exposed. The configured rules enforce the following policy:
+
+- Don't start any new connections.
+- Only accept traffic from already established TCP connections with the DMZ, destined to the database's server 5432 port.
+- All other traffic, including IPv6, is blocked.
+
+##### 2.2.1.2 DMZ
+
+The demilitarized zone is meant to be composed of servers that need to communicate with the internal network, but also need to communicate with the external network.
+A demilitarized zone was used as it acts as a buffer zone providing an additional layer of security. If one of these servers is compromised, the servers of the internal network are not immediately vulnerable, as there is a firewall between the two networks. If only an internal and external networks were configured and the application server was instead placed in the internal network, configuration would be simpler, but compromising one of the internal network's machines would make it easier to compromise the database server.
+
+The DMZ consists of one core machine, the application machine. It runs Spring Boot 2.4.1. This technology was picked as it is a popular Java framework to build web applications. It has a simple configuration and enables a rapid development process. It is also a familiar technology, used in previous courses. With it, a backend was built along with a REST API, allowing external clients to communicate with it.
+
+The application exposes the following endpoints:
+
+To shield the DMZ from malicious outside traffic, a firewall is used to filter incoming and outgoing packets. The `iptables` utility was used to configure the firewall rules as it is the de-facto standard for managing packet filter rules of the Linux kernel firewall. The configured rules enforce the following policy:
+
+- All TCP traffic from the DMZ on port 8443 to the external network is allowed.
+- All TCP traffic from the external network to the DMZ on port 8443 is allowed.
+- All other traffic, including IPv6, is blocked.
+
+The application server also has configured firewall rules. This offers an extra layer of protection as if the firewall gets compromised and its rules disabled, the application server is not so vulnerable to malicious traffic originated from the external network. The configured rules enforce the following policy:
+
+- Accept TCP traffic originated or destined to the internal network, from or to the internal network's machine port 5432.
+- Don't start new connection with the external network.
+- Accept TCP traffic originated or destined to the external network, from or to the application server's port 8443.
+- All other traffic, including IPv6, is blocked.
+
+##### 2.2.1.3 External Network
+
+The external network is composed of a client machine. It runs a CLI to interact with the application server via the REST API. Java was used as it is reliable programming language and synergizes well with the other technologies used.
+
+The firewall referred in the [last section](#2212-dmz) is also part of the external network.
 
 #### 2.2.2. Server Communication Security
 
-To secure the server communications, TLS was used as all the picked technologies used supported it.
+There were two main server security communication technologies considered: TLS and SSH. As all the used technology stack support TLS, this was the picked option.
 
-The communication between the internal network (the database server) and the DMZ (the application server) are secured by TLS. The configuration required to set up SSL in PostgreSQL was seamless, as it was only required to point to the key file, root CA and entity certificate files.
+The communication between the internal network (the database server) and the DMZ (the application server) is secured by TLS. The configuration required to set up SSL in PostgreSQL was seamless, as it was only required to point to the database server's key file, the application's certificate, which acts as a CA, and the database server's certificate. The configuration uses mutual TLS, where not only the server (database server) is authenticated but also the client (application server). The use of mutual TLS prevents man-in-the-middle attacks as the client is authenticated as well. If an attacker manages to create a _fake_ database server in the internal network, it won't be able to communicate with the application server as its certificate isn't signed by the CA.
 
-To secure the communication between the external network (the client) and the DMZ (the application server), HTTPS (HTTP over TLS) was used. The used configuration supports server and client authentication. The configuration of HTTPS in SpringBoot was challenging because, as a Java framework, it prefers manipulating Java's preferred key storage file format, the KeyStore. The previous configuration of TLS for securing the communication between the database and the application was set up using the `openssl`. However, for a better experience, the `keytool` was the chosen option as offers additional options for manipulating Java's KeyStore.
+To secure the communication between the external network (the client) and the DMZ (the application server), HTTPS (HTTP over TLS) was used. The used configuration supports server and client authentication, to mitigate the same type of attacks as mentioned above. The configuration of HTTPS in Spring Boot was challenging because, as a Java framework, it prefers manipulating Java's preferred key storage file format, the KeyStore. The previous configuration of TLS for securing the communication between the database and the application was set up using the `openssl`. However, for a better experience, the `keytool` was the chosen option as offers additional options for manipulating Java's KeyStore.
 
-The keys necessary for the TLS/HTTPS configuration are generated while setting up the machines. The generated keys on the three machines, the database server, application server and client, are RSA key pairs with 2048 bits. The keys are used to generate a certificate sign request and, in the case of the application server, a self-signed certificate. These certificates are then distributed during setup using `scp`.
-
-The certificate sign requests are then signed by the application server, which acts as a CA. The certificates are then exchanged again, using `scp`.
+The keys necessary for the TLS/HTTPS configuration are generated while setting up the machines. The generated keys on the three machines, the database server, application server and client, are RSA key pairs with 2048 bits. The keys are used to generate a certificate sign request and, in the case of the application server, a self-signed certificate. These certificate sign requests are then copied to the application server using `scp`. The application server then signs the certificate requests and copies them back to the respective servers, also using `scp`. The application server then adds the certificates to its trusted store, and the application's trusted store is copied to the database and client machines, using `scp`.
 
 ### 2.3. Security Challenge
 

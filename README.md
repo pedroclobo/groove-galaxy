@@ -135,7 +135,7 @@ hostssl groove postgres 192.168.0.0/24 md5
 
 **The setup of the application server has to be done in parallel with the setup of the database and client machines.** Please refer to the [database](#database-server) and [client](#client) configuration sections.
 
-This machine runs the application server (Java 17 / Spring-Boot 2.4.1).
+This machine runs the application server (Java 17 / Spring Boot 2.4.1).
 
 ##### First Configuration Step
 

@@ -45,7 +45,7 @@ public class Family {
 
     public void setOwner(User owner) throws Exception{
         if (owner.getFamily() != null) {
-            throw new Exception("User already has a family");
+            throw new Exception("User" + owner.getName() + " with id " + owner.getId() + " already has a family");
         }
 
         this.owner = owner;
@@ -60,12 +60,11 @@ public class Family {
     }
 
     public void addUser(User user) throws Exception {
-        if(this.owner.equals(user)) {
-            throw new Exception("User is already the owner of the family");
+        if(user == this.owner) {
+            throw new Exception("User" + user.getName() + " with id " + user.getId() + " is the owner of the family");
         }
-
         if(user.getFamily() != null) {
-            throw new Exception("User already has a family");
+            throw new Exception("User" + user.getName() + " with id " + user.getId() + " already has a family");
         }
 
         this.users.add(user);

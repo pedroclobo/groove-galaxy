@@ -24,20 +24,6 @@ public class FamilyService {
     @Autowired
     private UserRepository userRepository;
 
-    public JsonObject createFamily(Integer id) throws Exception {
-        User user = userRepository.findById(id).orElseThrow();
-
-        Family family = new Family();
-        family.setOwner(user);
-        familyRepository.save(family);
-        user.setFamily(family);
-        userRepository.save(user);
-        
-        JsonObject json = new JsonObject();
-        json.addProperty("family_id", family.getId());
-        return json;
-    }
-
     public JsonObject addUserToFamily(Integer owner_id, Integer user_id) throws Exception {
         JsonObject json = new JsonObject();
 

@@ -31,11 +31,6 @@ public class UserController {
         return userService.getAllUserSongs(id);
     }
 
-    @PostMapping(value="/user/{id}/create_family")
-    public JsonObject createFamily(@PathVariable(value = "id") Integer id) throws Exception {
-        return familyService.createFamily(id);
-    }
-
     @PostMapping(value="/user/{id}/add_to_family/{user_id}")
     public JsonObject addUserToFamily(@PathVariable(value = "id") Integer id, @PathVariable(value = "user_id") Integer user_id) throws Exception {
         return familyService.addUserToFamily(id, user_id);

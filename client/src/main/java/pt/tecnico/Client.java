@@ -1,64 +1,42 @@
 package pt.tecnico;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
+import pt.tecnico.menus.MenuInvoker;
+import pt.tecnico.commands.MenuCommand;
+import pt.tecnico.commands.LoginCommand;
+
 public class Client {
 
-    private static final String URL = "https://192.168.1.1:8443/songs/";
+    private static final String URL = "https://192.168.1.1:8443/";
+    private static final String KEYSTORE = "client.p12";
+    private static final String KEYSTORE_PASS = "changeme";
+    private static final String TRUSTSTORE = "client-keystore.jks";
+    private static final String TRUSTSTORE_PASS = "changeme";
 
-    public static void main(String[] args) {
-        try {
-            System.setProperty("javax.net.ssl.keyStore", "client.p12");
-            System.setProperty("javax.net.ssl.keyStorePassword", "changeme");
-            System.setProperty("javax.net.ssl.trustStore", "client-keystore.jks");
-            System.setProperty("javax.net.ssl.trustStorePassword", "changeme");
+    private static void setupClient() {
+        System.setProperty("javax.net.ssl.keyStore", KEYSTORE);
+        System.setProperty("javax.net.ssl.keyStorePassword", KEYSTORE_PASS);
+        System.setProperty("javax.net.ssl.trustStore", TRUSTSTORE);
+        System.setProperty("javax.net.ssl.trustStorePassword", TRUSTSTORE_PASS);
+    }
 
-            Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) throws Exception {
+        setupClient();
 
-            while (true) {
-                System.out.print("Enter the music id ('exit' to exit): ");
-                String musicId = scanner.nextLine().trim();
-                if (musicId.equalsIgnoreCase("exit")) {
-                    return;
-                }
-
-                // Construct the URL
-                URL url = new URL(URL + musicId);
-
-                // Open a connection to the URL
-                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-
-                // Set the request method to GET (or other HTTP methods as needed)
-                connection.setRequestMethod("GET");
-
-                // Get the response code
-                int responseCode = connection.getResponseCode();
-                System.out.println("Response Code: " + responseCode);
-
-                // Read the response
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                    String line;
-                    StringBuilder response = new StringBuilder();
-
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line);
-                    }
-
-                    // Print the response
-                    System.out.println("Response: " + response.toString());
-                }
-
-                // Close the connection
-                connection.disconnect();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        LoginCommand loginCommand = new LoginCommand(URL);
+        loginCommand.execute();
+        System.out.println("Logged in as " + loginCommand.getUserId());
     }
 }

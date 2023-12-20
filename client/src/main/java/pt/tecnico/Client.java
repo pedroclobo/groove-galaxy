@@ -7,9 +7,9 @@ public class Client {
 
     private static final String URL = "https://192.168.1.1:8443/";
     private static final String KEYSTORE = "client.p12";
-    private static final String KEYSTORE_PASS = "changeme";
+    private static final String KEYSTORE_PASS = System.getenv("KEYPASS");
     private static final String TRUSTSTORE = "client-keystore.jks";
-    private static final String TRUSTSTORE_PASS = "changeme";
+    private static final String TRUSTSTORE_PASS = System.getenv("STOREPASS");
 
     private static void setupClient() {
         System.setProperty("javax.net.ssl.keyStore", KEYSTORE);

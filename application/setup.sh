@@ -165,3 +165,10 @@ systemctl enable netfilter-persistent.service
 
 # Discard current firewall rules
 iptables -F
+
+# Remove files
+rm /home/$SUDO_USER/t52-andre-pedro-goncalo/application/application.crt
+rm /home/$SUDO_USER/t52-andre-pedro-goncalo/application/application.p12
+rm /home/$SUDO_USER/t52-andre-pedro-goncalo/application/application.pem
+rm /home/$SUDO_USER/t52-andre-pedro-goncalo/application/client.crt
+rm /home/$SUDO_USER/t52-andre-pedro-goncalo/application/database.crt

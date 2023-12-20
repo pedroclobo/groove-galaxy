@@ -103,5 +103,8 @@ sed -i "s/kali/$HOSTNAME/g" /etc/hosts
 apt install maven -y
 
 # Export key pass and store pass
+export KEYPASS=$KEYPASS
+export STOREPASS=$STOREPASS
+
 echo "export KEYPASS=$KEYPASS" >> /home/$SUDO_USER/.zshrc
 echo "export STOREPASS=$STOREPASS" >> /home/$SUDO_USER/.zshrc

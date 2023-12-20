@@ -32,9 +32,9 @@ public class Client {
         invoker.addCommand(new ExitCommand());
         invoker.addCommand(new CreateUserKeyCommand(URL, userId));
         invoker.addCommand(new GetSongsCommand(URL, userId));
-        invoker.addCommand(new CreateFamilyCommand(URL, userId));
         invoker.addCommand(new GetFamilyCommand(URL, userId));
         invoker.addCommand(new AddUserToFamilyCommand(URL, userId));
+        invoker.addCommand(new RemoveUserFromFamilyCommand(URL, userId));
         invoker.addCommand(new GetFamilyKeyCommand(URL, userId));
 
         invoker.displayMenu();

@@ -4,11 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
+import pt.tecnico.AESKeyGenerator;
+import pt.tecnico.JsonProtector;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Key;
 import java.util.Scanner;
 
 public class GetFamilyKeyCommand implements MenuCommand {
@@ -16,9 +20,11 @@ public class GetFamilyKeyCommand implements MenuCommand {
     private URL url;
 
     private int songId;
+    private int userId;
 
     public GetFamilyKeyCommand(String baseUrl, int userId) throws MalformedURLException {
         url = new URL(baseUrl + "user/" + userId + "/get_family_key/");
+        this.userId = userId;
     }
 
     @Override
@@ -46,6 +52,10 @@ public class GetFamilyKeyCommand implements MenuCommand {
                 System.out.println(json);
 
                 System.out.println();
+
+                Key masterKey = AESKeyGenerator.read("src/main/resources/keys/aes-key-" + userId + ".key");
+                Key userKey = JsonProtector.unprotectKey(jsonResponse, masterKey);
+                AESKeyGenerator.write("src/main/resources/keys/user-key-" + userId + ".key", userKey);
             }
 
             Scanner scanner = new Scanner(System.in);

@@ -58,10 +58,13 @@ public class FamilyService {
             familyRepository.save(family);
             
             user.setFamily(family);
-            userRepository.save(user);
-
+            
             Key key = KeyService.readSecretKey(owner.getUserKeyFile());
             String userKeyFile = "user_" + user.getId() + "_key.key";
+
+            user.setUserkeyFile(userKeyFile);
+            userRepository.save(user);
+
             KeyService.writeSecretKey(userKeyFile, key);
 
             json.addProperty("family_id", family.getId());
@@ -127,7 +130,7 @@ public class FamilyService {
             for(User familyUser : family.getUsers()) {
                 String familyUserKeyFile = "user_" + familyUser.getId() + "_key.key";
                 KeyService.writeSecretKey(familyUserKeyFile, ownerNewKey);
-                familyUser.setUserkeyFile(userKeyFile);
+                familyUser.setUserkeyFile(familyUserKeyFile);
                 userRepository.save(familyUser);
             }
 

@@ -1,64 +1,42 @@
 package pt.tecnico;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Scanner;
-
-import java.net.URL;
-import javax.net.ssl.HttpsURLConnection;
+import pt.tecnico.commands.*;
+import pt.tecnico.menus.MenuInvoker;
 
 public class Client {
 
-    private static final String URL = "https://192.168.1.1:8443/songs/";
+    private static final String URL = "https://192.168.1.1:8443/";
+    private static final String KEYSTORE = "client.p12";
+    private static final String KEYSTORE_PASS = System.getenv("KEYPASS");
+    private static final String TRUSTSTORE = "client-keystore.jks";
+    private static final String TRUSTSTORE_PASS = System.getenv("STOREPASS");
 
-    public static void main(String[] args) {
-        try {
-            System.setProperty("javax.net.ssl.keyStore", "client.p12");
-            System.setProperty("javax.net.ssl.keyStorePassword", "changeme");
-            System.setProperty("javax.net.ssl.trustStore", "client-keystore.jks");
-            System.setProperty("javax.net.ssl.trustStorePassword", "changeme");
+    private static void setupClient() {
+        System.setProperty("javax.net.ssl.keyStore", KEYSTORE);
+        System.setProperty("javax.net.ssl.keyStorePassword", KEYSTORE_PASS);
+        System.setProperty("javax.net.ssl.trustStore", TRUSTSTORE);
+        System.setProperty("javax.net.ssl.trustStorePassword", TRUSTSTORE_PASS);
+    }
 
-            Scanner scanner = new Scanner(System.in);
+    public static void main(String[] args) throws Exception {
+        setupClient();
 
-            while (true) {
-                System.out.print("Enter the music id ('exit' to exit): ");
-                String musicId = scanner.nextLine().trim();
-                if (musicId.equalsIgnoreCase("exit")) {
-                    return;
-                }
+        MenuInvoker invoker = new MenuInvoker();
+        invoker.addCommand(new LoginCommand(URL));
+        invoker.printHeader();
+        invoker.executeCommand(0);
+        LoginCommand command = (LoginCommand) invoker.getCommand(0);
+        int userId = command.getUserId();
 
-                // Construct the URL
-                URL url = new URL(URL + musicId);
+        invoker = new MenuInvoker();
+        invoker.addCommand(new ExitCommand());
+        invoker.addCommand(new CreateUserKeyCommand(URL, userId));
+        invoker.addCommand(new GetSongsCommand(URL, userId));
+        invoker.addCommand(new CreateFamilyCommand(URL, userId));
+        invoker.addCommand(new GetFamilyCommand(URL, userId));
+        invoker.addCommand(new AddUserToFamilyCommand(URL, userId));
+        invoker.addCommand(new GetFamilyKeyCommand(URL, userId));
 
-                // Open a connection to the URL
-                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-
-                // Set the request method to GET (or other HTTP methods as needed)
-                connection.setRequestMethod("GET");
-
-                // Get the response code
-                int responseCode = connection.getResponseCode();
-                System.out.println("Response Code: " + responseCode);
-
-                // Read the response
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
-                    String line;
-                    StringBuilder response = new StringBuilder();
-
-                    while ((line = reader.readLine()) != null) {
-                        response.append(line);
-                    }
-
-                    // Print the response
-                    System.out.println("Response: " + response.toString());
-                }
-
-                // Close the connection
-                connection.disconnect();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        invoker.displayMenu();
     }
 }

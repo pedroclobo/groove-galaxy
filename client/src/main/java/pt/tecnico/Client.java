@@ -1,22 +1,7 @@
 package pt.tecnico;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-
-import java.net.URL;
-import javax.net.ssl.HttpsURLConnection;
-
-import pt.tecnico.commands.ListSongsCommand;
+import pt.tecnico.commands.*;
 import pt.tecnico.menus.MenuInvoker;
-import pt.tecnico.commands.MenuCommand;
-import pt.tecnico.commands.LoginCommand;
 
 public class Client {
 
@@ -36,13 +21,22 @@ public class Client {
     public static void main(String[] args) throws Exception {
         setupClient();
 
-        LoginCommand loginCommand = new LoginCommand(URL);
-        loginCommand.execute();
-        int userId = loginCommand.getUserId();
+        MenuInvoker invoker = new MenuInvoker();
+        invoker.addCommand(new LoginCommand(URL));
+        invoker.printHeader();
+        invoker.executeCommand(0);
+        LoginCommand command = (LoginCommand) invoker.getCommand(0);
+        int userId = command.getUserId();
 
-        ListSongsCommand command = new ListSongsCommand(URL, userId);
-        command.execute();
+        invoker = new MenuInvoker();
+        invoker.addCommand(new ExitCommand());
+        invoker.addCommand(new CreateUserKeyCommand(URL, userId));
+        invoker.addCommand(new GetSongsCommand(URL, userId));
+        invoker.addCommand(new CreateFamilyCommand(URL, userId));
+        invoker.addCommand(new GetFamilyCommand(URL, userId));
+        invoker.addCommand(new AddUserToFamilyCommand(URL, userId));
+        invoker.addCommand(new GetFamilyKeyCommand(URL, userId));
 
-        System.out.println("Song id: " + command.getSongId());
+        invoker.displayMenu();
     }
 }

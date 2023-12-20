@@ -1,35 +1,28 @@
 package pt.tecnico.commands;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
-import javax.net.ssl.HttpsURLConnection;
+public class AddUserToFamilyCommand implements MenuCommand {
 
-public class LoginCommand implements MenuCommand {
     private URL url;
-    private int userId;
+    private String addUrl;
 
-    public LoginCommand(String baseUrl) throws MalformedURLException {
+    public AddUserToFamilyCommand(String baseUrl, int userId) throws MalformedURLException {
         url = new URL(baseUrl + "users/");
-    }
-
-    public int getUserId() {
-        return userId;
+        addUrl = baseUrl + "user/" + userId + "/add_to_family/";
     }
 
     @Override
     public String getDescription() {
-        return "Login";
+        return "Add User to Family";
     }
 
     @Override
@@ -49,7 +42,7 @@ public class LoginCommand implements MenuCommand {
                 JsonObject jsonResponse = new Gson().fromJson(response.toString(), JsonObject.class);
                 if (jsonResponse.has("users")) {
                     JsonObject users = jsonResponse.getAsJsonObject("users");
-                    System.out.println("Login as a user:");
+                    System.out.println("Pick a user:");
 
                     Set<String> userIds = users.keySet();
                     List<String> userIdsList = new ArrayList<>(List.copyOf(userIds));
@@ -60,17 +53,34 @@ public class LoginCommand implements MenuCommand {
                         System.out.println(userId + ". " + user.get("name").getAsString());
                     }
 
-                    // prompt the user to choose a user
                     Scanner scanner = new Scanner(System.in);
                     System.out.print("Choose a user (enter the number): ");
-                    userId = scanner.nextInt();
+                    int userId = scanner.nextInt();
+
+                    url = new URL(addUrl + userId);
+                    connection = (HttpsURLConnection) url.openConnection();
+                    connection.setRequestMethod("POST");
+
+                    int responseCode = connection.getResponseCode();
+
+                    if (responseCode != 200) {
+                        System.out.println("Error: " + responseCode);
+                    } else {
+                        System.out.println("Operation successful");
+                    }
+
                 } else {
                     System.out.println("No users found in the response.");
                 }
-            }
 
-            // Close the connection
-            connection.disconnect();
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("Press enter to go back...");
+                scanner.nextLine();
+
+                connection.disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

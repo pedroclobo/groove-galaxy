@@ -10,18 +10,19 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
-public class ListSongsCommand implements MenuCommand {
+public class GetFamilyCommand implements MenuCommand {
 
     private URL url;
 
     private int songId;
 
-    public ListSongsCommand(String baseUrl, int userId) throws MalformedURLException {
-        url = new URL(baseUrl + "user/" + userId + "/songs/");
+    public GetFamilyCommand(String baseUrl, int userId) throws MalformedURLException {
+        url = new URL(baseUrl + "user/" + userId + "/family/");
     }
 
-    public int getSongId() {
-        return songId;
+    @Override
+    public String getDescription() {
+        return "Get User Family";
     }
 
     @Override
@@ -39,21 +40,24 @@ public class ListSongsCommand implements MenuCommand {
                 }
 
                 JsonObject jsonResponse = new Gson().fromJson(response.toString(), JsonObject.class);
-                if (jsonResponse.has("songs")) {
-                    JsonObject songs = jsonResponse.getAsJsonObject("songs");
-                    System.out.println("GrooveGalaxy");
-                    System.out.println("Songs:");
-                    for (String songId : songs.keySet()) {
-                        System.out.println(songId + ". " + songs.get(songId).getAsString());
+
+                if (jsonResponse.has("users")) {
+                    JsonObject users = jsonResponse.getAsJsonObject("users");
+                    System.out.println("Family:");
+                    for (String userId : users.keySet()) {
+                        System.out.println(userId + ". " + users.get(userId).getAsString());
                     }
 
-                    Scanner scanner = new Scanner(System.in);
-                    System.out.print("Pick a song (enter the number): ");
-                    songId = scanner.nextInt();
-                } else {
-                    System.out.println("No songs found in the response.");
+                } else if (jsonResponse.has("error")) {
+                    System.out.println("Error: " + jsonResponse.get("error").getAsString());
                 }
+
+                System.out.println();
             }
+
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Press enter to go back...");
+            scanner.nextLine();
 
             connection.disconnect();
         } catch (Exception e) {

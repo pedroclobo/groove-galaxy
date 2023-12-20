@@ -153,11 +153,13 @@ The keys necessary for the TLS/HTTPS configuration are generated while setting u
 
 #### 2.3.1. Challenge Overview
 
-The security challenge introduced the need to use a cryptographic solution that allow playback to quickly start in the middle of an audio stream, without compromising security.
+The first security challenge introduced the need to use a cryptographic solution that allow playback to quickly start in the middle of an audio stream, without compromising security.
 
 The original solution used the CBC block cipher mode, in which the ciphertext of a block is dependent on the ciphertext of all blocks before it. It makes it impossible to start playback in the middle of a stream, as the decryption of a block depends on the previous block. This means that the entire stream needs to be decrypted before playback can start.
 
-(_Describe the new requirements introduced in the security challenge and how they impacted your original design._)
+The other security challenge introduced the concept of family sharing, where individual users can be members of the same family, and a protected song should be accessible to all family members without modification.
+
+In the original solution each user only had a single symetric key used to encrypt all messages. With family sharing we'll need to create a family key and dynamically distribute it to each family member.
 
 #### 2.3.2. Attacker Model
 
@@ -169,9 +171,13 @@ The original solution used the CBC block cipher mode, in which the ciphertext of
 
 To allow the playback to quickly start in the middle of an audio stream, the cryptographic solution was changed to use the CTR block cipher mode. This mode allows for random access, as each cipher block is generated independently from the others. This means that the decryption of a block can be done without decrypting the previous blocks, allowing for playback to start in the middle of a stream.
 
-(_Explain how your team redesigned and extended the solution to meet the security challenge, including key distribution and other security measures._)
+To implement family sharing and use the symetric key the least possible, we decided that each user would need a second key. This new key will be used to encrypt the user songs and to facilitate the creation of a family. To share this key, the previously shared symetric key is used to cipher the new one.
 
-(_Identify communication entities and the messages they exchange with a UML sequence or collaboration diagram._)  
+Each user has the ability to create a family. To do so, he simply needs to add another user. The user that created the family is the family owner and the new family member updates his key to be the owner's key. Now they both share the same key and have access to each other's songs.
+
+If the owner decides to remove a user from their family, a new owner key is generated and updated to the rest of the family members. The user that was previously part of the family also gets a new key. From now on they don't have access to each other's songs.
+
+![UML Sequence Diagram](img/Family-SequenceDiagram.png)
 
 ## 3. Conclusion
 

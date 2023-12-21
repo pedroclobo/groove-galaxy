@@ -342,6 +342,8 @@ Running `ip a` should reveal IP `192.168.1.253` and IP `192.168.2.254` under the
 
 ## Demonstration
 
+### Functionality
+
 Now that all the networks and machines are up and running, this section will go through a short demonstration of the application.
 
 Begin by starting the application. This can be done by running the following commands at the root of the project repository:
@@ -397,6 +399,16 @@ It is also possible to remove a user from the family, by choosing option 5, **Re
 ![](img/remove-from-family.png)
 
 Selecting option 2, **Get User Song**, only lists the current user's songs.
+
+### Security
+
+Due to the implemented secure channel solution, listening to the network with a packet sniffer only allows the attacker to capture encrypted traffic. This happens in the communications between the database and the application, protected by TLS, and between the application and the client, protected by HTTPS.
+
+![](img/https-sniff.png)
+
+A port scan on the database and application servers doesn't reveal any open port. The firewall configuration along with the individual firewall rules implemented in each one of the servers makes it hard for the attacker to exploit processes running on any other ports.
+
+![](img/port-scan.png)
 
 *(IMPORTANT: show evidence of the security mechanisms in action; show message payloads, print relevant messages, perform simulated attacks to show the defenses in action, etc.)*
 

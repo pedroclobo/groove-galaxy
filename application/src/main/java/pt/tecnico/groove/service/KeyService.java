@@ -1,10 +1,7 @@
 package pt.tecnico.groove.service;
 
 import com.google.gson.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.PathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.WritableResource;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +31,8 @@ public class KeyService {
     }
 
     private static byte[] readResource(String resourcePath) throws IOException {
-        Resource resource = new ClassPathResource(resourcePath);
-        return FileCopyUtils.copyToByteArray(resource.getInputStream());
+        File file = new File("src/main/resources" + resourcePath);
+        return FileCopyUtils.copyToByteArray(file);
     }
 
     private static void writeResource(String resourcePath, byte[] encoded) throws IOException {

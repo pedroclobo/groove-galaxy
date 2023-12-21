@@ -1,28 +1,33 @@
 package pt.tecnico.commands;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
+import pt.tecnico.AESKeyGenerator;
+import pt.tecnico.JsonProtector;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.Key;
 import java.util.*;
 
-public class AddUserToFamilyCommand implements MenuCommand {
+public class RemoveUserFromFamilyCommand implements MenuCommand {
 
     private URL url;
     private String addUrl;
 
-    public AddUserToFamilyCommand(String baseUrl, int userId) throws MalformedURLException {
-        url = new URL(baseUrl + "users/");
-        addUrl = baseUrl + "user/" + userId + "/add_to_family/";
+    public RemoveUserFromFamilyCommand(String baseUrl, int userId) throws MalformedURLException {
+        url = new URL(baseUrl + "user/" + userId + "/family/");
+        addUrl = baseUrl + "user/" + userId + "/remove_from_family/";
     }
 
     @Override
     public String getDescription() {
-        return "Add User to Family";
+        return "Remove user from family";
     }
 
     @Override
@@ -49,8 +54,7 @@ public class AddUserToFamilyCommand implements MenuCommand {
                     userIdsList.sort(Comparator.comparingInt(Integer::parseInt));
 
                     for (String userId : userIdsList) {
-                        JsonObject user = users.getAsJsonObject(userId);
-                        System.out.println(userId + ". " + user.get("name").getAsString());
+                        System.out.println(userId + ". " + users.get(userId).getAsString());
                     }
 
                     Scanner scanner = new Scanner(System.in);
@@ -69,6 +73,27 @@ public class AddUserToFamilyCommand implements MenuCommand {
                         System.out.println("Operation successful");
                     }
 
+
+                    // BufferedReader reader2 = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    // String line2;
+                    // StringBuilder response2 = new StringBuilder();
+
+                    // while ((line2 = reader2.readLine()) != null) {
+                    //     response2.append(line2);
+                    // }
+
+                    // reader.close();
+
+                    // JsonObject jsonResponse2 = new Gson().fromJson(response2.toString(), JsonObject.class);
+                    // Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    // String json = gson.toJson(jsonResponse2);
+                    // System.out.println(json);
+                    
+                    // Key masterKey = AESKeyGenerator.read("src/main/resources/keys/aes-key-" + userId + ".key");
+                    // Key userKey = JsonProtector.unprotectKey(jsonResponse2, masterKey);
+                    // AESKeyGenerator.write("src/main/resources/keys/user-key-" + userId + ".key", userKey);
+                    
+
                 } else {
                     System.out.println("No users found in the response.");
                 }
@@ -80,11 +105,9 @@ public class AddUserToFamilyCommand implements MenuCommand {
                 connection.disconnect();
             } catch (Exception e) {
                 e.printStackTrace();
-                System.exit(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.exit(1);
         }
     }
 }

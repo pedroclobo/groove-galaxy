@@ -193,13 +193,15 @@ Finally, to support the new requirements, the custom cryptographic library was m
 
 ## 3. Conclusion
 
-(_State the main achievements of your work._)
+In this project we designed and implemented the GrooveGalaxy online music store. It features personal accounts, ensures the authenticity of the song data and keeps it confidential and only accessible to its owners.
 
-(_Describe which requirements were satisfied, partially satisfied, or not satisfied; with a brief justification for each one._)
+We improved the base project to give users the ability to quickly start playback in the middle of an audio stream and to also support family sharing, enabling users to be part of the same family and share their songs to all family members. Both these requirements were satisfied without compromising security.
 
-(_Identify possible enhancements in the future._)
+Possible security enhancements to the project include:
+- Use of an Intrusion Detection System (IDS) to monitor the network and detect malicious activity in the subnet of the DMZ.
+- Protect plaintext key files with a password.
 
-(_Offer a concluding statement, emphasizing the value of the project experience._)
+With this project we were able to put into practice the lessons learned in the classes of Network and Computer Security. We dove deeper into the security needs and various ways to grant security to an application/system. From firewall rules to secure channels. From certificates to encryption. These and some other methods were used in the project and helped us to better understand the security needs of a system and how to implement them.
 
 ## 4. Bibliography
 

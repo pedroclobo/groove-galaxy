@@ -163,9 +163,19 @@ In the original solution each user only had a single symetric key used to encryp
 
 #### 2.3.2. Attacker Model
 
-(_Define who is fully trusted, partially trusted, or untrusted._)
+In our system, we fully trust internal services and authenticated users. Untrusted entities include anonymous users and potential attackers.
 
-(_Define how powerful the attacker is, with capabilities and limitations, i.e., what can he do and what he cannot do_)
+The attacker is assumed to be capable of a range of actions, including but not limited to:
+
+- Intercepting and modifying unencrypted network traffic;
+- Launching common web attacks such as SQL injection;
+- Trying to brute force user keys.
+
+However, the attacker is limited by several factors:
+
+- They cannot access encrypted data without the corresponding decryption key;
+- They cannot directly access the internal network or any system protected by a firewall;
+- Given the size of the keys, brute force attacks are not feasible.
 
 #### 2.3.3. Solution Design and Implementation
 

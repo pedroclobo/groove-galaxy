@@ -342,15 +342,61 @@ Running `ip a` should reveal IP `192.168.1.253` and IP `192.168.2.254` under the
 
 ## Demonstration
 
-Now that all the networks and machines are up and running, ...
+Now that all the networks and machines are up and running, this section will go through a short demonstration of the application.
 
-*(give a tour of the best features of the application; add screenshots when relevant)*
+Begin by starting the application. This can be done by running the following commands at the root of the project repository:
 
 ```sh
-$ demo command
+$ cd application
+$ mvn clean spring-boot:run
 ```
 
-*(replace with actual commands)*
+After the application has loaded, start the client with the following commands at the root of the repository, start the client with the following commands at the root of the repository:
+
+```sh
+$ cd client
+$ mvn compile exec:java
+```
+
+You are now greeted with the client's login screen. Login in with a user of your choice.
+
+![](img/login.png)
+
+After a successful login, you're now welcomed by the main menu of the client application. Here you can select all the available commands.
+
+![](img/menu.png)
+
+Now that you're logged in, create and get a key for the user. Select the first option, **Create User Key**.
+
+![](img/create-user-key.png)
+
+The operation should be successful and the user now has a new (temporary) key to decipher the songs. Press Enter to go back to the main menu.
+
+You can now get a song by selecting option 2, **Get User Song**. You will now be presented with a list of all the songs owned by the user. Choose a song. The lyrics will be printed on the screen and the song is saved to a file under the `resources` folder, as indicated in the output.
+
+![](img/get-song.png)
+
+Go back to the main menu.
+
+You can now add a user to the logged-in user's family. Begin by choosing option 4, **Add User to Family**. You will be shown a list of available user to add to the family. Pick a user other than yourself and go back to the main menu.
+
+![](img/add-to-family.png)
+
+You can now see who is part of your family by choosing option 3, **Get User Family**. Go back to the main menu.
+
+![](img/get-family.png)
+
+To listen to the same songs as a family, it is necessary to generate and get a family key. This can be done by choosing option 6, **Get User Family Key**. Go back to the main menu.
+
+![](img/get-family-key.png)
+
+If you select option 2, **Get User Song**, you will not only have your songs to listen to, but also the songs of your family members. Select one of the songs and go back to the main menu.
+
+It is also possible to remove a user from the family, by choosing option 5, **Remove user from family**. The list of current family members will be shown, and you can pick a user to remove. Select a user other than yourself. Go back to the main menu and generate a new user key.
+
+![](img/remove-from-family.png)
+
+Selecting option 2, **Get User Song**, only lists the current user's songs.
 
 *(IMPORTANT: show evidence of the security mechanisms in action; show message payloads, print relevant messages, perform simulated attacks to show the defenses in action, etc.)*
 

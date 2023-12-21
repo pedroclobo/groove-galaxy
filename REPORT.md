@@ -81,10 +81,6 @@ An example of a protected file is shown below:
 
 The chosen language to implement the custom cryptographic library is Java. The used cryptographic library is the Java Cryptography API.
 
-(_Detail the implementation process, including the programming language and cryptographic libraries used._)
-
-(_Include challenges faced and how they were overcome._)
-
 ### 2.2. Infrastructure
 
 #### 2.2.1. Network and Machine Setup
@@ -208,8 +204,6 @@ With this project we were able to put into practice the lessons learned in the c
 - [Block Cipher Modes of Operation](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation), by Wikipedia
 - [Transport Layer Security](https://en.wikipedia.org/wiki/Transport_Layer_Security), by Wikipedia
 - [HTTPS](https://en.wikipedia.org/wiki/HTTPS), by Wikipedia
-
-(_Present bibliographic references, with clickable links. Always include at least the authors, title, "where published", and year._)
 
 ----
 END OF REPORT

@@ -177,6 +177,8 @@ Each user has the ability to create a family. To do so, he simply needs to add a
 
 If the owner decides to remove a user from their family, a new owner key is generated and updated to the rest of the family members. The user that was previously part of the family also gets a new key. From now on they don't have access to each other's songs.
 
+Finally, to support the new requirements, the custom cryptographic library was modified to support dynamic key distribution. This means that the library now supports the creation of a new key, the encryption of a key with another key, and the decryption of a key. The library now supports everything needed by the application and the client to implement the new requirements.
+
 ![UML Sequence Diagram](img/Family-SequenceDiagram.png)
 
 ## 3. Conclusion
